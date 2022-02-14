@@ -1,5 +1,5 @@
 const config = {
-    domain : 'http://localhost:3001/codeacademy/api',
+    domain : 'http://localhost:3001/codeid/api',
     urlImage : 'http://localhost:3001/codeacademy/api/images',
     domainAuth : 'http://localhost:3001/codeacademy/auth/',
     env: process.env.NODE_ENV || 'development',
