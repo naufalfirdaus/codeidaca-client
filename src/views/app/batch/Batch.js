@@ -6,7 +6,7 @@ export default function Batch() {
   let navigate = useNavigate();
   return (
     <Page title='Batch' titleButton='Create' onClick={() => navigate('/app/batch/new')}>
-
+      <h2>Test</h2>
     </Page>
   )
 }
