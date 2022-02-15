@@ -49,7 +49,8 @@ const userReducer = (state = INIT_STATE, action) => {
         case ActionType.SHOW_MESSAGE: {
             return {
                 ...state,
-                message : action.payload.message
+                message : action.payload.message,
+                isLoggedIn : false
             };
         }
         default:
@@ -65,8 +66,7 @@ const applyAddSignupSucceed = (state, action) => {
         username: payload.user_name,
         email: payload.user_email,
         role_type: payload.user_role_type,
-        isLoading: false,
-        status: true
+        isLoading: false
     }
 }
 

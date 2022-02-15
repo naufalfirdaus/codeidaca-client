@@ -1,6 +1,6 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react';
-import { Outlet, Link, useNavigate,useLocation } from 'react-router-dom'
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
 import { doSignoutRequest } from '../../redux-saga/actions/User'
 import {
@@ -28,13 +28,13 @@ import {
 } from '@heroicons/react/solid'
 
 const navigation = [
-    { name: 'Home', href: '/app/dashboard', icon: HomeIcon, current: true },
-    { name: 'Candidat', href: '/app/candidat', icon: AcademicCapIcon, current: false },
-    { name: 'Batch', href: '/app/batch', icon: ViewGridAddIcon, current: false },
-    { name: 'Talent', href: '/app/talent', icon: UserGroupIcon, current: false },
-    { name: 'Curriculum', href: '/app/curriculum', icon: BookOpenIcon, current: false },
-    { name: 'Hiring', href: '/app/hiring', icon: PhoneOutgoingIcon, current: false },
-    { name: 'Setting', href: '/app/setting', icon: CogIcon, current: false },
+    { name: 'Home', href: '/app/dashboard', icon: HomeIcon, current: true, roles: ['administrator', 'recruiter', 'bd', 'sales', 'trainer'] },
+    { name: 'Candidat', href: '/app/candidat', icon: AcademicCapIcon, current: false, roles: ['administrator','recruiter', 'trainer'] },
+    { name: 'Batch', href: '/app/batch', icon: ViewGridAddIcon, current: false, roles: ['administrator','recruiter', 'trainer'] },
+    { name: 'Talent', href: '/app/talent', icon: UserGroupIcon, current: false, roles: ['administrator','recruiter', 'trainer', 'bd', 'sales'] },
+    { name: 'Curriculum', href: '/app/curriculum', icon: BookOpenIcon, current: false, roles: ['administrator','trainer'] },
+    { name: 'Hiring', href: '/app/hiring', icon: PhoneOutgoingIcon, current: false, roles: ['administrator','recruiter', 'bd', 'sales'] },
+    { name: 'Setting', href: '/app/setting', icon: CogIcon, current: false, roles: ['administrator','recruiter', 'bd', 'sales', 'trainer', 'candidate', 'talent', 'profesional'] },
 ]
 
 function classNames(...classes) {
@@ -50,12 +50,13 @@ export default function AppLayout() {
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
+
     const dispatch = useDispatch();
     const { userProfile } = useSelector((state) => state.userState);
 
     const onLogout = () => {
         dispatch(doSignoutRequest());
-        navigate('/auth/signin', {replace : true});
+        navigate('/auth/signin', { replace: true });
     }
 
 
@@ -119,7 +120,7 @@ export default function AppLayout() {
                             <div className="mt-5 flex-1 h-0 overflow-y-auto">
                                 <nav className="px-2">
                                     <div className="space-y-1">
-                                        {navigation.map((item) => (
+                                        {navigation.filter(item=> item.roles.includes(userProfile.userRoles)).map((item) => (
                                             <Link
                                                 key={item.name}
                                                 to={item.href}
@@ -300,7 +301,7 @@ export default function AppLayout() {
                         {/* Navigation */}
                         <nav className="px-3 mt-6">
                             <div className="space-y-1">
-                                {navigation.map((item) => (
+                                {navigation.filter(item=> item.roles.includes(userProfile.userRoles)).map((item) => (
                                     <Link
                                         key={item.name}
                                         to={item.href}

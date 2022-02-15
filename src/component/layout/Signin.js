@@ -1,18 +1,26 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { LockClosedIcon } from '@heroicons/react/solid'
-import { useNavigate,useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useFormik, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useDispatch,useSelector } from 'react-redux';
-import {doSigninRequest} from '../../redux-saga/actions/User'
+import { useDispatch, useSelector } from 'react-redux';
+import { doSigninRequest } from '../../redux-saga/actions/User'
 
 export default function Signin() {
   let navigate = useNavigate();
   let location = useLocation();
   let from = location.state?.from?.pathname || "/";
-  
+
   const dispatch = useDispatch();
-  const { message } = useSelector((state) => state.userState);
+  const { message, isLoggedIn } = useSelector((state) => state.userState);
+
+  useEffect(() => {
+    if (isLoggedIn){
+      navigate(from, { replace: true })
+    }
+
+  }, [isLoggedIn])
+  
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
@@ -32,12 +40,13 @@ export default function Signin() {
     onSubmit: async (values) => {
 
       let payload = {
-        email : values.email,
-        password : values.password
+        email: values.email,
+        password: values.password
       };
 
       dispatch(doSigninRequest(payload));
-      navigate(from, { replace: true });
+     
+
     }
   });
 
