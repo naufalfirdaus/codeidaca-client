@@ -40,13 +40,13 @@ export default function Routes(isLoggedIn) {
       path: '/app',
       element:  <AppLayout/>,
       children: [
-        { path: 'dashboard', element: <Dashboard/> },
-        { path: 'candidat', element: <Candidat/> },
-        { path: 'batch', element: <Batch /> },
-        { path: 'talent', element: <Talent /> },
-        { path: 'curriculum', element: <Curriculum /> },
-        { path: 'hiring', element: <Hiring /> },
-        { path: 'setting', element: <Setting /> },
+        { path: 'dashboard', element: isLoggedIn ? <Dashboard/> : <Navigate to="/auth/signin"/>},
+        { path: 'candidat', element: isLoggedIn ? <Candidat/>: <Navigate to="/auth/signin"/> },
+        { path: 'batch', element: isLoggedIn ? <Batch /> : <Navigate to="/auth/signin"/>},
+        { path: 'talent', element: isLoggedIn ? <Talent />: <Navigate to="/auth/signin"/> },
+        { path: 'curriculum', element: isLoggedIn ? <Curriculum />: <Navigate to="/auth/signin"/> },
+        { path: 'hiring', element: isLoggedIn ? <Hiring /> : <Navigate to="/auth/signin"/> },
+        { path: 'setting', element: isLoggedIn ? <Setting /> : <Navigate to="/auth/signin"/> },
       ]
     },
     { path: '*', element: <Navigate to="/404" replace /> }
