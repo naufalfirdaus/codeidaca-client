@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import Page from '../../../component/commons/Page';
-import { useNavigate, NavLink, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 // import config from '../../config/config';
 
@@ -9,18 +9,11 @@ import { doEditCandidatStatusRequest, doGetCandidatRequest } from '../../../redu
 
 import { Menu, Transition } from '@headlessui/react'
 //theming toast
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
     DotsVerticalIcon,
-    DuplicateIcon,
-    PhotographIcon,
-    PencilAltIcon,
-    TrashIcon,
-    UserAddIcon,
-    LockClosedIcon,
-    RefreshIcon
 } from '@heroicons/react/solid'
 
 const listOfMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -46,7 +39,7 @@ export default function Candidat() {
     const [listCandidates, setListCandidates] = useState([])
     const [filter, setFilter] = useState({
         timeline_status:'',
-        month : 'Filter by Month',
+        month : 'Filter By Month',
         year :  'Year'
     })
     const [tab, setTab] = useState(
@@ -62,28 +55,23 @@ export default function Candidat() {
     //1.create state candidates
 
     const {candidates} = useSelector((state) => state.candidatState)
+    const { userProfile } = useSelector((state) => state.userState);
 
     //2.declare useEffect, non dependency
     useEffect(() => {
         dispatch(doGetCandidatRequest())
-        setListCandidates(candidates)
     }, []);
-
-    useEffect(() => {
-        setListCandidates(candidates)
-    }, [candidates]);
 
     useEffect(() => {
         setListCandidates(
             Array.isArray(candidates) && candidates.filter(data=>(
-                (data.tale_status_timeline.toLowerCase() === filter.timeline_status.toLowerCase() || filter.timeline_status === '') 
+                (data.tale_status_timeline.toLowerCase().includes(filter.timeline_status.toLowerCase()) || filter.timeline_status === '') 
                 &&
                 (data.talent_timelines[0].date_applied.slice(0,4) === filter.year || filter.year === 'Year')
                 &&
                 (parseInt(data.talent_timelines[0].date_applied.slice(5,7))-1 === listOfMonth.indexOf(filter.month) || filter.month === 'Filter By Month')
             )))
-        console.log(filter);
-    }, [filter]);
+    }, [candidates,filter]);
 
     const handleOnChangeStatus = (name) => {
         setFilter({...filter, timeline_status: name });
@@ -168,7 +156,7 @@ export default function Candidat() {
                                             <td className="px-6 py-6 text-center whitespace-nowrap text-sm text-gray-900">
                                                 <div className="flex items-center">
                                                     <div className="flex-shrink-0 h-10 w-10">
-                                                        <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""/>
+                                                        <img className="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""/>
                                                     </div>
                                                     <div className="ml-4 text-left">
                                                         <div className="text-sm font-medium text-gray-900">{data.tale_fullname}</div>
@@ -217,7 +205,7 @@ export default function Candidat() {
         
                                                                                 <Link to='#'
                                                                                 onClick={() => {
-                                                                                        if (window.confirm("Are you sure want to Close this Batch?"))
+                                                                                        if (window.confirm("Are you sure want to Switch Candidat Status?"))
                                                                                             onEditTimelineStatus(data.tale_id,"Confirm Test")
                                                                                     }}
                                                                                 className={classNames(
@@ -231,14 +219,15 @@ export default function Candidat() {
                                                                             )}
                                                                         </Menu.Item>
                                                                     </div>
+                                                                    {userProfile.userRoles === "trainer" &&
                                                                     <div className="py-1">
                                                                         <Menu.Item>
                                                                             {({ active }) => (
         
                                                                                 <Link to='#'
                                                                                 onClick={() => {
-                                                                                        if (window.confirm("Are you sure want to Close this Batch?"))
-                                                                                            onEditTimelineStatus(data.tale_id,"Filtering Test")
+                                                                                        if (window.confirm("Are you sure want to Switch Candidat Status?"))
+                                                                                            onEditTimelineStatus(data.tale_id,"Filtering Test Pass")
                                                                                     }}
                                                                                 className={classNames(
                                                                                     active ? 'bg-gray-300 text-gray-700' : 'text-gray-900',
@@ -246,7 +235,48 @@ export default function Candidat() {
                                                                                 )}>
         
                                                                                     
-                                                                                    Filtering Test
+                                                                                    Filtering Test Pass
+                                                                                </Link>
+                                                                            )}
+                                                                        </Menu.Item>
+                                                                    </div>}
+                                                                    {userProfile.userRoles === "trainer" &&
+                                                                    <div className="py-1">
+                                                                        <Menu.Item>
+                                                                            {({ active }) => (
+        
+                                                                                <Link to='#'
+                                                                                onClick={() => {
+                                                                                        if (window.confirm("Are you sure want to Switch Candidat Status?"))
+                                                                                            onEditTimelineStatus(data.tale_id,"Filtering Test Failed")
+                                                                                    }}
+                                                                                className={classNames(
+                                                                                    active ? 'bg-gray-300 text-gray-700' : 'text-gray-900',
+                                                                                    'group flex items-center px-4 py-2 text-sm'
+                                                                                )}>
+        
+                                                                                    
+                                                                                    Filtering Test Failed
+                                                                                </Link>
+                                                                            )}
+                                                                        </Menu.Item>
+                                                                    </div>}
+                                                                    <div className="py-1">
+                                                                        <Menu.Item>
+                                                                            {({ active }) => (
+        
+                                                                                <Link to='#'
+                                                                                onClick={() => {
+                                                                                        if (window.confirm("Are you sure want to Switch Candidat Status?"))
+                                                                                            onEditTimelineStatus(data.tale_id,"Contract Done")
+                                                                                    }}
+                                                                                className={classNames(
+                                                                                    active ? 'bg-gray-300 text-gray-700' : 'text-gray-900',
+                                                                                    'group flex items-center px-4 py-2 text-sm'
+                                                                                )}>
+        
+                                                                                    
+                                                                                    Contract Done
                                                                                 </Link>
                                                                             )}
                                                                         </Menu.Item>
@@ -257,27 +287,7 @@ export default function Candidat() {
         
                                                                                 <Link to='#'
                                                                                 onClick={() => {
-                                                                                        if (window.confirm("Are you sure want to Close this Batch?"))
-                                                                                            onEditTimelineStatus(data.tale_id,"Contract")
-                                                                                    }}
-                                                                                className={classNames(
-                                                                                    active ? 'bg-gray-300 text-gray-700' : 'text-gray-900',
-                                                                                    'group flex items-center px-4 py-2 text-sm'
-                                                                                )}>
-        
-                                                                                    
-                                                                                    Contract
-                                                                                </Link>
-                                                                            )}
-                                                                        </Menu.Item>
-                                                                    </div>
-                                                                    <div className="py-1">
-                                                                        <Menu.Item>
-                                                                            {({ active }) => (
-        
-                                                                                <Link to='#'
-                                                                                onClick={() => {
-                                                                                        if (window.confirm("Are you sure want to Close this Batch?"))
+                                                                                        if (window.confirm("Are you sure want to Switch Candidat Status?"))
                                                                                             onEditTimelineStatus(data.tale_id,"Disqualified")
                                                                                     }}
                                                                                 className={classNames(
@@ -302,7 +312,7 @@ export default function Candidat() {
                                 ))}
                             </tbody>
                         </table>
-                        {listCandidates.length == 0 && 
+                        {listCandidates.length === 0 && 
                         <div className='px-6 py-3 text-center whitespace-nowrap text-sm font-medium text-gray-900'> Data Not Found...</div>}
                 </div>
             </div>

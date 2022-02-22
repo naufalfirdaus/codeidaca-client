@@ -12,8 +12,7 @@ const candidateList = async()=>{
 
 const updateCandidateStatus = async(data)=>{
     try {
-        const result = await axios.put(`${config.domain}/candidat/${data.tale_id}`,
-        data);
+        const result = await axios.put(`${config.domain}/candidat/${data.tale_id}`,data);
         return  result;
     } catch (error) {
         return error;

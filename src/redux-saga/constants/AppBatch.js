@@ -13,3 +13,11 @@ export const EDIT_BATCH_STATUS_FAILED = 'batch/editstatus/failed';
 export const DELETE_BATCH_REQUEST = 'batch/delete/request';
 export const DELETE_BATCH_SUCCEED = 'batch/delete/succeed';
 export const DELETE_BATCH_FAILED = 'batch/delete/failed';
+
+export const GET_BATCH_ID_REQUEST = 'batch/getid/request';
+export const GET_BATCH_ID_SUCCEED = 'batch/getid/succeed';
+export const GET_BATCH_ID_FAILED = 'batch/getid/failed';
+
+export const EDIT_BATCH_REQUEST = 'batch/edit/request';
+export const EDIT_BATCH_SUCCEED = 'batch/edit/succeed';
+export const EDIT_BATCH_FAILED = 'batch/edit/failed';

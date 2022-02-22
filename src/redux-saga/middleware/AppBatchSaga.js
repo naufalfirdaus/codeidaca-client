@@ -9,7 +9,11 @@ import {
     doEditBatchSucceed,
     doEditBatchFailed,
     doDeleteBatchSucceed,
-    doDeleteBatchFailed
+    doDeleteBatchFailed,
+    doGetBatchIdSucceed,
+    doGetBatchIdFailed,
+    doEditBatchStatusSucceed,
+    doEditBatchStatusFailed
 } from '../actions/AppBatch'
 
 function* handleGetBatch(){
@@ -26,9 +30,9 @@ function* handleEditBatchStatus(action) {
     try {
         yield call(apiAppBatch.updateBatchStatus,payload);
         const result = yield call(apiAppBatch.batchList);
-        yield put(doEditBatchSucceed(result));
+        yield put(doEditBatchStatusSucceed(result));
     } catch (error) {
-        yield put(doEditBatchFailed(error));
+        yield put(doEditBatchStatusFailed(error));
     }
 }
 
@@ -42,9 +46,39 @@ function* handleDeleteBatch(action) {
     }
 }
 
+function* handleGetBatchId(action){
+    let {payload} = action;
+    try {
+        const result_batch = yield call(apiAppBatch.batch,payload);
+        const result_talents = yield call(apiAppBatch.talentList);
+        const result_trainers = yield call(apiAppBatch.instructorList);
+        payload = {
+            batch: result_batch[0],
+            talents: result_talents,
+            trainers: result_trainers
+        }
+        yield put(doGetBatchIdSucceed(payload))        
+    } catch (error) {
+        yield put(doGetBatchIdFailed(error));
+    }
+}
+
+function* handleEditBatch(action) {
+    const {payload} = action;
+    try {
+        yield call(apiAppBatch.updateBatch,payload);
+        const result = yield call(apiAppBatch.batchList);
+        yield put(doEditBatchSucceed(result));
+    } catch (error) {
+        yield put(doEditBatchFailed(error));
+    }
+}
+
 
 export {
     handleGetBatch,
     handleEditBatchStatus,
-    handleDeleteBatch
+    handleDeleteBatch,
+    handleGetBatchId,
+    handleEditBatch
 }

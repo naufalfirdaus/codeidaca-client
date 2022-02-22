@@ -5,7 +5,7 @@ import { useNavigate, NavLink, Link, useLocation } from 'react-router-dom';
 // import config from '../../config/config';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { doDeleteBatchRequest, doEditBatchRequest, doGetBatchRequest } from '../../../redux-saga/actions/AppBatch';
+import { doDeleteBatchRequest, doEditBatchStatusRequest, doGetBatchRequest } from '../../../redux-saga/actions/AppBatch';
 
 import { Menu, Transition } from '@headlessui/react'
 //theming toast
@@ -22,14 +22,15 @@ import {
     LockClosedIcon,
     RefreshIcon
 } from '@heroicons/react/solid'
+import config from '../../../config/config';
 
 const columns = [
-  { name: 'BATCH' },
-  { name: 'TECHNOLOGY' },
-  { name: 'MEMBERS' },
-  { name: 'PERIOD' },
-  { name: 'TRAINER' },
-  { name: 'STATUS' }
+    { name: 'BATCH' },
+    { name: 'TECHNOLOGY' },
+    { name: 'MEMBERS' },
+    { name: 'PERIOD' },
+    { name: 'TRAINER' },
+    { name: 'STATUS' }
 ]
 
 const batch_status =['new','running', 'closed']
@@ -53,15 +54,21 @@ export default function Batch() {
     //1.create state batchs
 
     const {batchs} = useSelector((state) => state.batchState)
+    const { userProfile } = useSelector((state) => state.userState);
 
     //2.declare useEffect, non dependency
     useEffect(() => {
         dispatch(doGetBatchRequest())
-        setListBatch(batchs)
     }, []);
 
     useEffect(() => {
-        setListBatch(batchs)
+        setListBatch(
+            Array.isArray(batchs) && batchs.filter(data=>(
+                (data.batch_name.toLowerCase().includes(filter.input.toLowerCase()) || 
+                data.batch_technology.toLowerCase().includes(filter.input.toLowerCase()) ||
+                data.batch_inst.inst_name.toLowerCase().includes(filter.input.toLowerCase())) &&
+                (filter.select === 'Status' || data.batch_status.includes(filter.select))))
+            )
     }, [batchs]);
 
     const handleOnChange = (name) => (event) => {
@@ -70,35 +77,21 @@ export default function Batch() {
 
     const onSearch = event =>{
         event.preventDefault();
-        if (filter.input || (filter.select)) {
-            setListBatch(
-                Array.isArray(batchs) && batchs.filter(data=>(
-                    (data.batch_name.toLowerCase().includes(filter.input.toLowerCase()) || 
-                    data.batch_technology.toLowerCase().includes(filter.input.toLowerCase()) ||
-                    data.batch_inst.inst_name.toLowerCase().includes(filter.input.toLowerCase())) &&
-                    (filter.select === 'Status' || data.batch_status.includes(filter.select))))
-                )
-        }else{
-            setListBatch(batchs)
-        }
+        setListBatch(
+            Array.isArray(batchs) && batchs.filter(data=>(
+                (data.batch_name.toLowerCase().includes(filter.input.toLowerCase()) || 
+                data.batch_technology.toLowerCase().includes(filter.input.toLowerCase()) ||
+                data.batch_inst.inst_name.toLowerCase().includes(filter.input.toLowerCase())) &&
+                (filter.select === 'Status' || data.batch_status.includes(filter.select))))
+            )
     }
 
-    const onCloseBatch = async (id) => {
-        console.log(id);
+    const onSetStatusBatch = async(id, name) => {
         const payload = {
             batch_id: id,
-            batch_status: "closed"
+            batch_status: name
         }
-        dispatch(doEditBatchRequest(payload))
-    }
-
-    const onRunningeBatch = async (id) => {
-        console.log(id);
-        const payload = {
-            batch_id: id,
-            batch_status: "running"
-        }
-        dispatch(doEditBatchRequest(payload))
+        dispatch(doEditBatchStatusRequest(payload))
     }
 
     const onDelete = async(id)=>{
@@ -145,7 +138,7 @@ export default function Batch() {
                 <div className="align-middle inline-block min-w-full border-b border-gray-200 ">
                         <table className="min-w-full">
                             <thead className="border-y border-gray-200">
-                                <tr>
+                                <tr key="col_names">
                                     {(columns || []).map(column => (
                                         <th className="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-900 uppercase">
                                             <span className="">{column.name}</span>
@@ -160,18 +153,14 @@ export default function Batch() {
                                         <tr key={data.batch_id}>
                                             <td className="px-6 py-2 text-center whitespace-nowrap text-sm text-gray-900">{data.batch_name}</td>
                                             <td className="px-6 py-2 text-center whitespace-nowrap text-sm text-gray-900">{data.batch_technology}</td>
-                                            <td className="px-6 py-2 text-center whitespace-nowrap text-sm text-gray-900">
-                                                <div>
-                                                    <div class="inline-flex justify-left -space-x-1 overflow-hidden w-[6.5rem]">
+                                            <td className="px-6 py-2 flex justify-center whitespace-nowrap text-sm text-gray-900">
+                                                <div className="flex justify-between items-center overflow-hidden w-[7.7rem]">
+                                                    <div className='flex justify-left -space-x-1'>
                                                         {data.talent_batches.slice(0,4).map(taba=>(
-                                                        <span>
-                                                            <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""/>
-                                                            {/* {taba.taba_tale.tale_photo} */}
-                                                            
-                                                        </span>
+                                                            <img className="block h-7 w-7 rounded-full ring-2 ring-white" src={`${config.urlImageTalent}/${taba.taba_tale.tale_photo}`} alt={`${taba.taba_tale.tale_id}`} />
                                                         ))}
-                                                        {data.talent_batches.length > 4 && <span className='pl-2'>{"+" + (data.talent_batches.length-4)}</span>}
                                                     </div>
+                                                    {data.talent_batches.length > 4 && <div className='pl-2'>{"+" + (data.talent_batches.length-4)}</div>}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-2 text-center whitespace-nowrap text-xs text-gray-900">
@@ -202,11 +191,13 @@ export default function Batch() {
                                                                     static
                                                                     className="mx-3 origin-top-right absolute right-7 top-0 w-48 mt-1 rounded-md shadow-lg z-10 bg-gray-100 ring-1 ring-gray-900 ring-opacity-5 divide-y divide-gray-300 focus:outline-none"
                                                                 >
+                                                                    {userProfile.userRoles === "recruiter" &&
                                                                     <div className="py-1">
                                                                         <Menu.Item>
                                                                             {({ active }) => (
         
-                                                                                <Link to='/app/batch/edit'
+                                                                                <Link 
+                                                                                to={'/app/batch/edit/' + data.batch_id}
                                                                                 className={classNames(
                                                                                     active ? 'bg-gray-300 text-gray-700' : 'text-gray-900',
                                                                                     'group flex items-center px-4 py-2 text-sm'
@@ -221,7 +212,8 @@ export default function Batch() {
                                                                             )}
                                                                         </Menu.Item>
         
-                                                                    </div>
+                                                                    </div>}
+                                                                    {userProfile.userRoles === "trainer" &&
                                                                     <div className="py-1">
                                                                         <Menu.Item>
                                                                             {({ active }) => (
@@ -229,7 +221,7 @@ export default function Batch() {
                                                                                 <Link to='#'
                                                                                 onClick={() => {
                                                                                         if (window.confirm("Are you sure want to Close this Batch?"))
-                                                                                            onCloseBatch(data.batch_id)
+                                                                                            onSetStatusBatch(data.batch_id, "closed")
                                                                                     }}
                                                                                 className={classNames(
                                                                                     active ? 'bg-gray-300 text-gray-700' : 'text-gray-900',
@@ -244,7 +236,8 @@ export default function Batch() {
                                                                                 </Link>
                                                                             )}
                                                                         </Menu.Item>
-                                                                    </div>
+                                                                    </div>}
+                                                                    {userProfile.userRoles === "recruiter" &&
                                                                     <div className="py-1">
                                                                         <Menu.Item>
                                                                             {({ active }) => (
@@ -267,7 +260,8 @@ export default function Batch() {
                                                                                 </Link>
                                                                             )}
                                                                         </Menu.Item>
-                                                                    </div>
+                                                                    </div>}
+                                                                    {userProfile.userRoles === "trainer" &&
                                                                     <div className="py-1">
                                                                         <Menu.Item>
                                                                             {({ active }) => (
@@ -275,7 +269,7 @@ export default function Batch() {
                                                                                 <Link to='#'
                                                                                 onClick={() => {
                                                                                     if (window.confirm("Are you sure want to set to Running this Batch?"))
-                                                                                        onRunningeBatch(data.batch_id)
+                                                                                        onSetStatusBatch(data.batch_id, "running")
                                                                                 }}
                                                                                 className={classNames(
                                                                                     active ? 'bg-gray-300 text-gray-700' : 'text-gray-900',
@@ -290,7 +284,7 @@ export default function Batch() {
                                                                                 </Link>
                                                                             )}
                                                                         </Menu.Item>
-                                                                    </div>
+                                                                    </div>}
                                                                 </Menu.Items>
                                                             </Transition>
                                                         </>
@@ -302,6 +296,8 @@ export default function Batch() {
                                 ))}
                             </tbody>
                         </table>
+                        {listBatch.length === 0 && 
+                        <div className='px-6 py-3 text-center whitespace-nowrap text-sm font-medium text-gray-900'> Data Not Found...</div>}
                 </div>
             </div>
         </Page>

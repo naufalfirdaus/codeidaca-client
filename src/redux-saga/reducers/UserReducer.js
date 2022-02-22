@@ -2,10 +2,12 @@ import * as ActionType from '../constants/User';
 
 const INIT_STATE = {
     
-    profile:{},
+    userProfile:{},
     isLogout : false,
     isLoading : true,
-    isLoggedIn : false
+    isLoggedIn : false,
+    token : localStorage.getItem('@token'),
+    message : ''
 }
 
 const userReducer = (state = INIT_STATE, action) => {
@@ -44,6 +46,13 @@ const userReducer = (state = INIT_STATE, action) => {
                 error: action.payload.error,
             };
         }
+        case ActionType.SHOW_MESSAGE: {
+            return {
+                ...state,
+                message : action.payload.message,
+                isLoggedIn : false
+            };
+        }
         default:
             return state;
     }
@@ -57,8 +66,7 @@ const applyAddSignupSucceed = (state, action) => {
         username: payload.user_name,
         email: payload.user_email,
         role_type: payload.user_role_type,
-        isLoading: false,
-        status: true
+        isLoading: false
     }
 }
 
@@ -67,18 +75,27 @@ const applyGetSigninSucceed = (state, action) => {
     const { profile } = payload
     return {
         ...state,
-        profile: {...action.payload},
+        userProfile: {...profile},
         isLoading: false,
         isLoggedIn : true,
-        isLogout : false
+        isLogout : false,
+        message : ''
     }
 }
 
 const applyGetSignoutSucceed = (state, action) => {
     return {
         ...state,
-        profile: undefined,
-        isLoading: false
+        userProfile: {
+            userId : "",
+            userName : "",
+            email : "",
+            userRoles : ""
+        },
+        isLoading: false,
+        isLoggedIn : false,
+        isLogout : true,
+        message : "",
     }
 }
 

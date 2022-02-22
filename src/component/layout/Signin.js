@@ -1,7 +1,57 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { LockClosedIcon } from '@heroicons/react/solid'
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useFormik, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useDispatch, useSelector } from 'react-redux';
+import { doSigninRequest } from '../../redux-saga/actions/User'
 
 export default function Signin() {
+  let navigate = useNavigate();
+  let location = useLocation();
+  let from = location.state?.from?.pathname || "/";
+
+  const dispatch = useDispatch();
+  const { message, isLoggedIn } = useSelector((state) => state.userState);
+
+
+  useEffect(() => {
+    if (isLoggedIn){
+      navigate(from, { replace: true })
+    }
+
+  }, [isLoggedIn])
+  
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+    password: Yup
+      .string()
+      .min(5)
+      .max(5)
+      .required(),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: ""
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+
+      let payload = {
+        email: values.email,
+        password: values.password
+      };
+
+      dispatch(doSigninRequest(payload));
+     
+
+    }
+  });
+
+
   return (
     <>
 
@@ -10,7 +60,7 @@ export default function Signin() {
           <div>
             <img
               className="mx-auto h-12 w-auto"
-              src="./assets/images/codeid.png"
+              src="../assets/images/codeid.png"
               alt="Workflow"
             />
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
@@ -32,11 +82,17 @@ export default function Signin() {
                   id="email-address"
                   name="email"
                   type="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   autoComplete="email"
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Email address"
                 />
+                {formik.touched.email && formik.errors.email ? (
+                  <span className="mt-2 text-sm text-red-600">{formik.errors.email}</span>
+                ) : null}
               </div>
               <div>
                 <label htmlFor="password" className="sr-only">
@@ -46,11 +102,20 @@ export default function Signin() {
                   id="password"
                   name="password"
                   type="password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   autoComplete="current-password"
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Password"
                 />
+                {formik.touched.password && formik.errors.password ? (
+                  <span className="mt-2 text-sm text-red-600">{formik.errors.password}</span>
+                ) : null}
+                {message ? (
+                  <span className="mt-2 text-sm text-red-600">{message}</span>
+                ) : null}
               </div>
             </div>
 
@@ -76,9 +141,11 @@ export default function Signin() {
 
             <div>
               <button
-                type="submit"
+                type="button"
+                onClick={formik.handleSubmit}
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
+                
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                   <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
                 </span>

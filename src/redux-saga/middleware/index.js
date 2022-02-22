@@ -4,7 +4,7 @@ import * as ActionTypeBatch from '../constants/AppBatch'
 import * as ActionTypeCandidat from '../constants/AppCandidat'
 
 import {handleSignup,handleSignin,handleSignout} from './UserSaga'
-import {handleGetBatch, handleEditBatchStatus, handleDeleteBatch} from './AppBatchSaga'
+import {handleGetBatch, handleEditBatchStatus, handleDeleteBatch, handleGetBatchId, handleEditBatch} from './AppBatchSaga'
 import { handleEditCandidatStatus, handleGetCandidat } from './AppCandidatSaga';
 
 function *watchAll() {
@@ -16,6 +16,8 @@ function *watchAll() {
     takeEvery(ActionTypeBatch.GET_BATCH_REQUEST, handleGetBatch),
     takeEvery(ActionTypeBatch.EDIT_BATCH_STATUS_REQUEST, handleEditBatchStatus),
     takeEvery(ActionTypeBatch.DELETE_BATCH_REQUEST, handleDeleteBatch),
+    takeEvery(ActionTypeBatch.GET_BATCH_ID_REQUEST, handleGetBatchId),
+    takeEvery(ActionTypeBatch.EDIT_BATCH_REQUEST, handleEditBatch),
 
     takeEvery(ActionTypeCandidat.GET_CANDIDAT_REQUEST, handleGetCandidat),
     takeEvery(ActionTypeCandidat.EDIT_CANDIDAT_STATUS_REQUEST, handleEditCandidatStatus),

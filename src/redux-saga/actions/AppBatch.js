@@ -14,6 +14,21 @@ export const doGetBatchFailed =(payload)=>({
     payload
 })
 
+export const doGetBatchIdRequest =(payload)=>({
+    type : ActionType.GET_BATCH_ID_REQUEST,
+    payload
+})
+
+export const doGetBatchIdSucceed =(payload)=>({
+    type : ActionType.GET_BATCH_ID_SUCCEED,
+    payload
+})
+
+export const doGetBatchIdFailed =(payload)=>({
+    type : ActionType.GET_BATCH_ID_FAILED,
+    payload
+})
+
 export const doAddBatchRequest = (payload) => ({
     type: ActionType.ADD_BATCH_REQUEST,
     payload,
@@ -28,18 +43,33 @@ export const doAddBatchFailed = (payload) => ({
     type: ActionType.ADD_BATCH_FAILED ,
     payload,
 });
-export const doEditBatchRequest = (payload) => ({
+export const doEditBatchStatusRequest = (payload) => ({
     type: ActionType.EDIT_BATCH_STATUS_REQUEST,
     payload,
 });
 
-export const doEditBatchSucceed = (payload) => ({
+export const doEditBatchStatusSucceed = (payload) => ({
     type: ActionType.EDIT_BATCH_STATUS_SUCCEED ,
     payload,
 });
 
-export const doEditBatchFailed = (payload) => ({
+export const doEditBatchStatusFailed = (payload) => ({
     type: ActionType.EDIT_BATCH_STATUS_FAILED ,
+    payload,
+});
+
+export const doEditBatchRequest = (payload) => ({
+    type: ActionType.EDIT_BATCH_REQUEST,
+    payload,
+});
+
+export const doEditBatchSucceed = (payload) => ({
+    type: ActionType.EDIT_BATCH_SUCCEED ,
+    payload,
+});
+
+export const doEditBatchFailed = (payload) => ({
+    type: ActionType.EDIT_BATCH_FAILED ,
     payload,
 });
 

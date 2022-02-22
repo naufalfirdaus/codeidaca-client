@@ -34,3 +34,8 @@ export const doSignoutSucceed = (payload) => ({
     type: ActionType.GET_SIGNOUT_SUCCEED,
     payload,
 });
+
+export const doShowAuthMessage = (message) => ({
+    type: ActionType.SHOW_MESSAGE,
+    payload: message
+});

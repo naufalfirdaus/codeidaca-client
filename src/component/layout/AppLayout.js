@@ -1,7 +1,8 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react';
-import { Outlet,Link } from 'react-router-dom'
-
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux';
+import { doSignoutRequest } from '../../redux-saga/actions/User'
 import {
     HomeIcon, MenuAlt1Icon, XIcon, SelectorIcon,
     ClipboardListIcon,
@@ -15,6 +16,7 @@ import {
     AcademicCapIcon,
     BookOpenIcon
 } from '@heroicons/react/outline'
+
 import {
     ChevronRightIcon,
     DotsVerticalIcon,
@@ -26,21 +28,37 @@ import {
 } from '@heroicons/react/solid'
 
 const navigation = [
-    { name: 'Home', href: '/app/dashboard', icon: HomeIcon, current: true },
-    { name: 'Candidat', href: '/app/candidat', icon: AcademicCapIcon, current: false },
-    { name: 'Batch', href: '/app/batch', icon: ViewGridAddIcon, current: false },
-    { name: 'Talent', href: '/app/talent', icon: UserGroupIcon, current: false },
-    { name: 'Curriculum', href: '/app/curriculum', icon: BookOpenIcon, current: false },
-    { name: 'Hiring', href: '/app/hiring', icon: PhoneOutgoingIcon, current: false },
-    { name: 'Setting', href: '/app/setting', icon: CogIcon, current: false },
+    { name: 'Home', href: '/app/dashboard', icon: HomeIcon, current: true, roles: ['administrator', 'recruiter', 'bd', 'sales', 'trainer'] },
+    { name: 'Candidat', href: '/app/candidat', icon: AcademicCapIcon, current: false, roles: ['administrator','recruiter', 'trainer'] },
+    { name: 'Batch', href: '/app/batch', icon: ViewGridAddIcon, current: false, roles: ['administrator','recruiter', 'trainer'] },
+    { name: 'Talent', href: '/app/talent', icon: UserGroupIcon, current: false, roles: ['administrator','recruiter', 'trainer', 'bd', 'sales'] },
+    { name: 'Test', href: '/app/curriculum', icon: BookOpenIcon, current: false, roles: ['administrator','trainer'] },
+    { name: 'Hiring', href: '/app/hiring', icon: PhoneOutgoingIcon, current: false, roles: ['administrator','recruiter', 'bd', 'sales'] },
+    { name: 'Setting', href: '/app/setting', icon: CogIcon, current: false, roles: ['administrator','recruiter', 'bd', 'sales', 'trainer', 'candidate', 'talent', 'profesional'] },
 ]
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
+
+
 export default function AppLayout() {
-    const [sidebarOpen, setSidebarOpen] = useState(false)
+    let navigate = useNavigate()
+    let location = useLocation();
+    let from = location.state?.from?.pathname || "/";
+
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
+
+    const dispatch = useDispatch();
+    const { userProfile } = useSelector((state) => state.userState);
+
+    const onLogout = () => {
+        dispatch(doSignoutRequest());
+        navigate('/auth/signin', { replace: true });
+    }
+
 
     return (
         <div className="h-screen flex overflow-hidden bg-white">
@@ -95,14 +113,14 @@ export default function AppLayout() {
                             <div className="flex-shrink-0 flex items-center px-4">
                                 <img
                                     className="h-10 w-auto"
-                                    src="./assets/images/codeid.png"
+                                    src="../assets/images/codeid.png"
                                     alt="codeid"
                                 />
                             </div>
                             <div className="mt-5 flex-1 h-0 overflow-y-auto">
                                 <nav className="px-2">
                                     <div className="space-y-1">
-                                        {navigation.map((item) => (
+                                        {navigation.filter(item=> item.roles.includes(userProfile.userRoles)).map((item) => (
                                             <Link
                                                 key={item.name}
                                                 to={item.href}
@@ -140,11 +158,13 @@ export default function AppLayout() {
             <div className="hidden lg:flex lg:flex-shrink-0">
                 <div className="flex flex-col w-64 border-r border-gray-200 pt-5 pb-4 bg-gray-100">
                     <div className="flex items-center flex-shrink-0 px-6">
-                        <img
-                            className="h-10 w-auto"
-                            src="./assets/images/codeid.png"
-                            alt="codeid"
-                        />
+                        <Link to="/">
+                            <img
+                                className="h-10 w-auto"
+                                src="../assets/images/codeid.png"
+                                alt="codeid"
+                            />
+                        </Link>
                     </div>
                     {/* Sidebar component, swap this element with another sidebar if you like */}
                     <div className="h-0 flex-1 flex flex-col overflow-y-auto">
@@ -158,12 +178,12 @@ export default function AppLayout() {
                                                 <span className="flex min-w-0 items-center justify-between space-x-3">
                                                     <img
                                                         className="w-10 h-10 bg-gray-300 object-cover rounded-full flex-shrink-0"
-                                                        src="./assets/images/yuri.jpg"
+                                                        src="../assets/images/yuri.jpg"
                                                         alt=""
                                                     />
                                                     <span className="flex-1 flex flex-col min-w-0">
-                                                        <span className="text-gray-900 text-sm font-medium truncate">Jang Nara</span>
-                                                        <span className="text-gray-500 text-sm truncate">@jangnara</span>
+                                                        <span className="text-gray-900 text-sm font-medium truncate">{userProfile.username}</span>
+                                                        <span className="text-gray-500 text-sm truncate">{userProfile.email}</span>
                                                     </span>
                                                 </span>
                                                 <SelectorIcon
@@ -244,7 +264,7 @@ export default function AppLayout() {
                                                 </Menu.Item>
                                                 <Menu.Item>
                                                     {({ active }) => (
-                                                        <a
+                                                        <Link
                                                             to="#"
                                                             className={classNames(
                                                                 active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
@@ -252,7 +272,7 @@ export default function AppLayout() {
                                                             )}
                                                         >
                                                             Support
-                                                        </a>
+                                                        </Link>
                                                     )}
                                                 </Menu.Item>
                                             </div>
@@ -260,7 +280,8 @@ export default function AppLayout() {
                                                 <Menu.Item>
                                                     {({ active }) => (
                                                         <Link
-                                                            to="#"
+                                                            to="/"
+                                                            onClick={onLogout}
                                                             className={classNames(
                                                                 active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                                                 'block px-4 py-2 text-sm'
@@ -280,7 +301,7 @@ export default function AppLayout() {
                         {/* Navigation */}
                         <nav className="px-3 mt-6">
                             <div className="space-y-1">
-                                {navigation.map((item) => (
+                                {navigation.filter(item=> item.roles.includes(userProfile.userRoles)).map((item) => (
                                     <Link
                                         key={item.name}
                                         to={item.href}
@@ -347,7 +368,7 @@ export default function AppLayout() {
                                                 <span className="sr-only">Open user menu</span>
                                                 <img
                                                     className="w-10 h-10 bg-gray-300 object-cover rounded-full flex-shrink-0"
-                                                    src="./assets/images/yuri.jpg"
+                                                    src="../assets/images/yuri.jpg"
                                                     alt=""
                                                 />
                                             </Menu.Button>
@@ -440,6 +461,7 @@ export default function AppLayout() {
                                                         {({ active }) => (
                                                             <Link
                                                                 to="#"
+                                                                onClick={onLogout}
                                                                 className={classNames(
                                                                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                                                     'block px-4 py-2 text-sm'
