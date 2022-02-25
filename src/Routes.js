@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, useRoutes,Outlet,useNavigate } from 'react-router-dom';
+import { Navigate, useRoutes, Outlet, useNavigate } from 'react-router-dom';
 import AppLayout from './component/layout/AppLayout';
 import LandingPage from './component/layout/LandingPage';
 import MainLayout from './component/layout/MainLayout';
@@ -15,35 +15,37 @@ import Setting from './views/app/setting/Setting';
 import Talent from './views/app/talent/Talent'
 import BlankLayout from './component/layout/BlankLayout';
 import Signup from './component/layout/Signup';
+import TalentDetail from './views/app/talent/TalentDetail'
 
 export default function Routes(isLoggedIn) {
   return useRoutes([
     {
       path: '/',
-      element: <LandingPage/>,
+      element: <LandingPage />,
       children: [
-        { path: 'signin', element: <Navigate to="/auth/signin"  />  },
-        { path: 'signup', element: <Navigate to="/auth/signup"  />  },
-        { path: 'bootcamp', element: <Bootcamp/> },
+        { path: 'signin', element: <Navigate to="/auth/signin" /> },
+        { path: 'signup', element: <Navigate to="/auth/signup" /> },
+        { path: 'bootcamp', element: <Bootcamp /> },
         { path: '404', element: <Page404 /> },
       ]
     },
     {
       path: '/auth',
-      element: <BlankLayout/>,
+      element: <BlankLayout />,
       children: [
-        { path: 'signin', element: <Signin/> },
-        { path: 'signup', element: <Signup/> },
+        { path: 'signin', element: <Signin /> },
+        { path: 'signup', element: <Signup /> },
       ]
     },
     {
       path: '/app',
-      element:  <AppLayout/>,
+      element: <AppLayout />,
       children: [
-        { path: 'dashboard', element: <Dashboard/> },
-        { path: 'candidat', element: <Candidat/> },
+        { path: 'dashboard', element: <Dashboard /> },
+        { path: 'candidat', element: <Candidat /> },
         { path: 'batch', element: <Batch /> },
         { path: 'talent', element: <Talent /> },
+        { path: 'talent/profile/:id', element: <TalentDetail /> },
         { path: 'curriculum', element: <Curriculum /> },
         { path: 'hiring', element: <Hiring /> },
         { path: 'setting', element: <Setting /> },
