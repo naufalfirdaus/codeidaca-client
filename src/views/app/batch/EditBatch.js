@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, NavLink, Link, useParams } from 'react-router-dom';
+import { useNavigate, NavLink, Link, useParams, Navigate } from 'react-router-dom';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ToastContainer, toast } from 'react-toastify';
@@ -9,12 +9,14 @@ import Page from '../../../component/commons/Page';
  
 import {
     CalendarIcon,
+    ChevronLeftIcon,
     UserGroupIcon,
     XIcon
 } from '@heroicons/react/solid'
 import { useDispatch, useSelector } from 'react-redux';
 import { doEditBatchRequest, doGetBatchIdRequest } from '../../../redux-saga/actions/AppBatch';
 import config from '../../../config/config';
+import { ChevronRightIcon } from '@heroicons/react/outline';
 
 // const technologies = ['NodeJS','Golang','.NET','Java','Python']
 
@@ -28,10 +30,15 @@ export default function EditBatch() {
 
     const dispatch = useDispatch();
     const {batch, talents, trainers} = useSelector((state) => state.batchState)
+    const { userProfile } = useSelector((state) => state.userState);
 
     const [members, setMembers] = useState([])
     const [countMembers, setCountMembers] = useState(0)
     const [trainerNames, setTrainerNames] = useState([])
+
+    const [pageNumbers, setPageNumbers] = useState([])
+    const [currentPage, setCurrentPage] = useState(1)
+    const [pageRange, setPageRange] = useState(0)
 
     const {id} = useParams()
 
@@ -58,14 +65,18 @@ export default function EditBatch() {
                 }
             ))
         )
+        setPageNumbers(Array.from({length: Math.ceil(talents.length/12)}, (v, i) => (i+1 === 1 ? {number: i+1, active: true} : {number: i+1, active: false})))
     }, [talents])
 
     useEffect(() => {
         setCountMembers(
             members.length && members.filter(el=>el.selected).length
         )
-        console.log(countMembers);
     }, [members])
+
+    useEffect(()=>{
+        setPageNumbers(Array.from({length: Math.ceil(members.length/12)}, (v, i) => (i+1 === 1 ? {number: i+1, active: true} : {number: i+1, active: false})))
+    },[])
 
     const validationSchema = Yup.object().shape({
         batch_name: Yup
@@ -117,7 +128,7 @@ export default function EditBatch() {
             //post with redux-saga
             dispatch(doEditBatchRequest(payload))
 
-            navigate(-1)
+            navigate('/app/batch', {state:{ updated: true }})
         }
       });
 
@@ -129,8 +140,8 @@ export default function EditBatch() {
         formik.setFieldValue('batch_technology', trainers.filter(el=>el.inst_name === value)[0].inst_bootcamp);
     }
   
-    return <>
-        <Page title='Edit Batch' titleButton='Back' onClick={() => navigate(-1)} >
+    return userProfile.userRoles === "recruiter" ? <>
+        <Page title='Edit Batch' titleButton='Back' onClick={() => navigate('/app/batch', {state:{ updated: false }})} >
             <div className="mt-5 md:mt-0 md:col-span-2">
                 <form action="#" method="POST" >
                     <div className="shadow overflow-hidden sm:rounded-md">
@@ -233,22 +244,22 @@ export default function EditBatch() {
                                         RECOMMENDED BOOTCAMP MEMBERS
                                     </h1>
                                 </div>
-                                {members && members.map((el,index)=>(
+                                {members && members.slice((currentPage-1)*12,currentPage*12).map((el,index)=>(
                                     <div>
                                         <input 
                                             className='hidden'
                                             type="checkbox" 
-                                            id={`${index}`}
+                                            id={`${index+(currentPage-1)*12}`}
                                             checked={el.selected}
                                             onChange={()=>{
                                                 setMembers(()=>{
-                                                members[index].selected = !el.selected
+                                                members[index+(currentPage-1)*12].selected = !el.selected
                                                 return [...members]
                                                 })
                                             }}  
                                         />
                                         <label 
-                                            htmlFor={`${index}`}
+                                            htmlFor={`${index+(currentPage-1)*12}`}
                                             className={classNames(
                                                 el.selected ? "border-gray-400 bg-green-400" : "border-gray-400 bg-white",
                                                 "cursor-pointer border border-gray-400 bg-white shadow-md rounded-lg py-2 pl-2 flex items-center justify-between"
@@ -270,6 +281,85 @@ export default function EditBatch() {
                                     </div>    
                                 ))}
                             </div>
+                            <div className="bg-gray-100 px-4 py-3 flex items-center justify-between border-b border-gray-300 sm:px-6">
+                                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                    <div>
+                                        <p className="text-sm text-gray-700">
+                                            Showing <span className="font-medium">{(currentPage-1)*12+1}</span> to <span className="font-medium">{(currentPage)*12<members.length ? (currentPage)*12 : members.length}</span> of{' '}
+                                            <span className="font-medium">{members.length}</span> results
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <nav className="relative z-0 inline-flex rounded-md -space-x-px" aria-label="Pagination">
+                                            <button
+                                                type="button"
+                                                onClick={()=>{
+                                                    setCurrentPage(1)
+                                                    setPageNumbers([...pageNumbers].map(val=>(val.number === 1 ? {...val,active:true} : {...val,active:false})))
+                                                    setPageRange(0)
+                                                }}
+                                                className="relative inline-flex items-center px-3 py-2 font-medium text-gray-600 hover:text-orange-600"
+                                                >
+                                                <span className="underline">First</span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={()=>{
+                                                    const min = 0
+                                                    if (pageRange>min) {
+                                                        setPageRange(pageRange-1)
+                                                    }
+                                                }}
+                                                className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                                                >
+                                                <span className="sr-only">Previous</span>
+                                                    <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                                            </button>
+                                            {/* Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
+
+                                            {pageNumbers.slice(pageRange*4, pageRange*4+4).map(el=>(
+                                                <button
+                                                    type="button"
+                                                    onClick={()=>{
+                                                        setCurrentPage(el.number)
+                                                        setPageNumbers([...pageNumbers].map(val=>(val.number === el.number ? {...val,active:true} : {...val,active:false})))
+                                                    }}
+                                                    aria-current="page"
+                                                    className={classNames(el.active ? "z-20 bg-orange-100 border-orange-600 text-orange-900" : "z-10 bg-white border-gray-300 text-gray-600",
+                                                    "relative inline-flex items-center px-4 py-2 border text-sm font-medium")}
+                                                    >
+                                                    {el.number}
+                                                </button>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={()=>{
+                                                    const max = Math.ceil(pageNumbers.length/4)-1
+                                                    if (pageRange<max) {
+                                                        setPageRange(pageRange+1)
+                                                    }
+                                                }}
+                                                className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                                                >
+                                                <span className="sr-only">Next</span>
+                                                <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={()=>{
+                                                    const max = Math.ceil(pageNumbers.length/4)-1
+                                                    setCurrentPage(pageNumbers.length)
+                                                    setPageNumbers([...pageNumbers].map(val=>(val.number === pageNumbers.length ? {...val,active:true} : {...val,active:false})))
+                                                    setPageRange(max)
+                                                }}
+                                                className="relative inline-flex items-center px-3 py-2 font-medium text-gray-600 hover:text-orange-600"
+                                                >
+                                                <span className="underline">Last</span>
+                                            </button>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
                             <button
@@ -281,7 +371,7 @@ export default function EditBatch() {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => navigate(-1)}
+                                onClick={() => navigate('/app/batch', {state:{ updated: false }})}
                                 className="inline-flex ml-3 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
                             >
                                 Cancel
@@ -293,5 +383,5 @@ export default function EditBatch() {
         </Page>
         <ToastContainer autoClose={2000} />
     
-    </>
+    </> : <Navigate to="/auth/signin"/>
 }

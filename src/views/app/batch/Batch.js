@@ -20,7 +20,9 @@ import {
     TrashIcon,
     UserAddIcon,
     LockClosedIcon,
-    RefreshIcon
+    RefreshIcon,
+    ChevronRightIcon,
+    ChevronLeftIcon
 } from '@heroicons/react/solid'
 import config from '../../../config/config';
 
@@ -42,34 +44,47 @@ function classNames(...classes) {
 
 export default function Batch() {
     let navigate = useNavigate();
+    const location = useLocation();
 
     const dispatch = useDispatch();
 
-    const [listBatch, setListBatch] = useState([])
+    const [listBatches, setListBatches] = useState([])
     const [filter, setFilter] = useState({
         input:'',
         select:''
     })
 
-    //1.create state batchs
+    const [pageNumbers, setPageNumbers] = useState([])
+    const [currentPage, setCurrentPage] = useState(1)
+    const [pageRange, setPageRange] = useState(0)
 
-    const {batchs} = useSelector((state) => state.batchState)
+    //1.create state batches
+
+    const {batches} = useSelector((state) => state.batchState)
     const { userProfile } = useSelector((state) => state.userState);
 
     //2.declare useEffect, non dependency
     useEffect(() => {
         dispatch(doGetBatchRequest())
+        
+        if(location.state && location.state.updated){toast.success('Batch has been updated.')}
     }, []);
 
     useEffect(() => {
-        setListBatch(
-            Array.isArray(batchs) && batchs.filter(data=>(
+        setListBatches(
+            Array.isArray(batches) && batches.filter(data=>(
                 (data.batch_name.toLowerCase().includes(filter.input.toLowerCase()) || 
                 data.batch_technology.toLowerCase().includes(filter.input.toLowerCase()) ||
                 data.batch_inst.inst_name.toLowerCase().includes(filter.input.toLowerCase())) &&
                 (filter.select === 'Status' || data.batch_status.includes(filter.select))))
             )
-    }, [batchs]);
+    }, [batches]);
+
+    useEffect(()=>{
+        setPageNumbers(Array.from({length: Math.ceil(listBatches.length/10)}, (v, i) => (i+1 === 1 ? {number: i+1, active: true} : {number: i+1, active: false})))
+        setCurrentPage(1)
+        setPageRange(0)
+    },[listBatches])
 
     const handleOnChange = (name) => (event) => {
         setFilter({ ...filter, [name]: event.target.value });
@@ -77,8 +92,8 @@ export default function Batch() {
 
     const onSearch = event =>{
         event.preventDefault();
-        setListBatch(
-            Array.isArray(batchs) && batchs.filter(data=>(
+        setListBatches(
+            Array.isArray(batches) && batches.filter(data=>(
                 (data.batch_name.toLowerCase().includes(filter.input.toLowerCase()) || 
                 data.batch_technology.toLowerCase().includes(filter.input.toLowerCase()) ||
                 data.batch_inst.inst_name.toLowerCase().includes(filter.input.toLowerCase())) &&
@@ -92,6 +107,7 @@ export default function Batch() {
             batch_status: name
         }
         dispatch(doEditBatchStatusRequest(payload))
+        toast.success('Batch Status has been updated.')
     }
 
     const onDelete = async(id)=>{
@@ -149,12 +165,12 @@ export default function Batch() {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-100">
-                                { Array.isArray(listBatch) && listBatch.map((data) => (
+                                { Array.isArray(listBatches) && listBatches.slice((currentPage-1)*10,currentPage*10).map((data) => (
                                         <tr key={data.batch_id}>
                                             <td className="px-6 py-2 text-center whitespace-nowrap text-sm text-gray-900">{data.batch_name}</td>
                                             <td className="px-6 py-2 text-center whitespace-nowrap text-sm text-gray-900">{data.batch_technology}</td>
                                             <td className="px-6 py-2 flex justify-center whitespace-nowrap text-sm text-gray-900">
-                                                <div className="flex justify-between items-center overflow-hidden w-[7.7rem]">
+                                                <div className="flex justify-between items-center overflow-hidden w-[8rem]">
                                                     <div className='flex justify-left -space-x-1'>
                                                         {data.talent_batches.slice(0,4).map(taba=>(
                                                             <img className="block h-7 w-7 rounded-full ring-2 ring-white" src={`${config.urlImageTalent}/${taba.taba_tale.tale_photo}`} alt={`${taba.taba_tale.tale_id}`} />
@@ -296,8 +312,83 @@ export default function Batch() {
                                 ))}
                             </tbody>
                         </table>
-                        {listBatch.length === 0 && 
+                        {listBatches.length === 0 && 
                         <div className='px-6 py-3 text-center whitespace-nowrap text-sm font-medium text-gray-900'> Data Not Found...</div>}
+
+                        <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-700">
+                                        Showing <span className="font-medium">{(currentPage-1)*10+1}</span> to <span className="font-medium">{(currentPage)*10<listBatches.length ? (currentPage)*10 : listBatches.length}</span> of{' '}
+                                        <span className="font-medium">{listBatches.length}</span> results
+                                    </p>
+                                </div>
+                                <div>
+                                    <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        <button
+                                            onClick={()=>{
+                                                setCurrentPage(1)
+                                                setPageNumbers([...pageNumbers].map(val=>(val.number === 1 ? {...val,active:true} : {...val,active:false})))
+                                                setPageRange(0)
+                                            }}
+                                            className="relative inline-flex items-center px-3 py-2 font-medium text-gray-600 hover:text-orange-600"
+                                            >
+                                            <span className="underline">First</span>
+                                        </button>
+                                        <button
+                                        onClick={()=>{
+                                            const min = 0
+                                            if (pageRange>min) {
+                                                setPageRange(pageRange-1)
+                                            }
+                                        }}
+                                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                                        >
+                                        <span className="sr-only">Previous</span>
+                                            <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                                        </button>
+                                        {/* Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
+
+                                        {pageNumbers.slice(pageRange*4, pageRange*4+4).map(el=>(
+                                            <button
+                                                onClick={()=>{
+                                                    setCurrentPage(el.number)
+                                                    setPageNumbers([...pageNumbers].map(val=>(val.number === el.number ? {...val,active:true} : {...val,active:false})))
+                                                }}
+                                                aria-current="page"
+                                                className={classNames(el.active ? "z-20 bg-orange-100 border-orange-600 text-orange-900" : "z-10 bg-white border-gray-300 text-gray-600",
+                                                "relative inline-flex items-center px-4 py-2 border text-sm font-medium")}
+                                                >
+                                                {el.number}
+                                            </button>
+                                        ))}
+                                        <button
+                                        onClick={()=>{
+                                            const max = Math.ceil(pageNumbers.length/4)-1
+                                            if (pageRange<max) {
+                                                setPageRange(pageRange+1)
+                                            }
+                                        }}
+                                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                                        >
+                                        <span className="sr-only">Next</span>
+                                        <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                                        </button>
+                                        <button
+                                            onClick={()=>{
+                                                const max = Math.ceil(pageNumbers.length/4)-1
+                                                setCurrentPage(pageNumbers.length)
+                                                setPageNumbers([...pageNumbers].map(val=>(val.number === pageNumbers.length ? {...val,active:true} : {...val,active:false})))
+                                                setPageRange(max)
+                                            }}
+                                            className="relative inline-flex items-center px-3 py-2 font-medium text-gray-600 hover:text-orange-600"
+                                            >
+                                            <span className="underline">Last</span>
+                                        </button>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </Page>

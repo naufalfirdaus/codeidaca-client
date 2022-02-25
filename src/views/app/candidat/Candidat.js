@@ -9,12 +9,15 @@ import { doEditCandidatStatusRequest, doGetCandidatRequest } from '../../../redu
 
 import { Menu, Transition } from '@headlessui/react'
 //theming toast
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
+    ChevronLeftIcon,
+    ChevronRightIcon,
     DotsVerticalIcon,
 } from '@heroicons/react/solid'
+import config from '../../../config/config';
 
 const listOfMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -52,6 +55,10 @@ export default function Candidat() {
         ]
     )
 
+    const [pageNumbers, setPageNumbers] = useState([])
+    const [currentPage, setCurrentPage] = useState(1)
+    const [pageRange, setPageRange] = useState(0)
+
     //1.create state candidates
 
     const {candidates} = useSelector((state) => state.candidatState)
@@ -59,7 +66,7 @@ export default function Candidat() {
 
     //2.declare useEffect, non dependency
     useEffect(() => {
-        dispatch(doGetCandidatRequest())
+        dispatch((doGetCandidatRequest()))
     }, []);
 
     useEffect(() => {
@@ -72,6 +79,12 @@ export default function Candidat() {
                 (parseInt(data.talent_timelines[0].date_applied.slice(5,7))-1 === listOfMonth.indexOf(filter.month) || filter.month === 'Filter By Month')
             )))
     }, [candidates,filter]);
+// [1,2,3,4,5,6,7,10] === Array.from({length: 10, (v, i) => i+1})
+    useEffect(()=>{
+        setPageNumbers(Array.from({length: Math.ceil(listCandidates.length/5)}, (v, i) => (i+1 === 1 ? {number: i+1, active: true} : {number: i+1, active: false})))
+        setCurrentPage(1)
+        setPageRange(0)
+    },[listCandidates])
 
     const handleOnChangeStatus = (name) => {
         setFilter({...filter, timeline_status: name });
@@ -94,6 +107,7 @@ export default function Candidat() {
             timeline_status: status
         }
         dispatch(doEditCandidatStatusRequest(payload))
+        toast.success('Candidate Status has been updated.')
     }
 
     return (
@@ -151,12 +165,12 @@ export default function Candidat() {
                 <div className="align-middle inline-block min-w-full border-b border-gray-200 ">
                         <table className="min-w-full">
                             <tbody className="bg-white divide-y divide-gray-100">
-                                { Array.isArray(listCandidates) && listCandidates.map((data) => (
+                                { Array.isArray(listCandidates) && listCandidates.slice((currentPage-1)*5,currentPage*5).map((data) => (
                                         <tr key={data.tale_id}>
                                             <td className="px-6 py-6 text-center whitespace-nowrap text-sm text-gray-900">
                                                 <div className="flex items-center">
                                                     <div className="flex-shrink-0 h-10 w-10">
-                                                        <img className="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""/>
+                                                        <img className="h-10 w-10 rounded-full" src={`${config.urlImageTalent}/${data.tale_photo}`} alt={`${data.tale_id}`}/>
                                                     </div>
                                                     <div className="ml-4 text-left">
                                                         <div className="text-sm font-medium text-gray-900">{data.tale_fullname}</div>
@@ -314,6 +328,83 @@ export default function Candidat() {
                         </table>
                         {listCandidates.length === 0 && 
                         <div className='px-6 py-3 text-center whitespace-nowrap text-sm font-medium text-gray-900'> Data Not Found...</div>}
+
+
+                        <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-700">
+                                        Showing <span className="font-medium">{(currentPage-1)*5+1}</span> to <span className="font-medium">{(currentPage)*5<listCandidates.length ? (currentPage)*5 : listCandidates.length}</span> of{' '}
+                                        <span className="font-medium">{listCandidates.length}</span> results
+                                    </p>
+                                </div>
+                                <div>
+                                    <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        <button
+                                        onClick={()=>{
+                                            setCurrentPage(1)
+                                            setPageNumbers([...pageNumbers].map(val=>(val.number === 1 ? {...val,active:true} : {...val,active:false})))
+                                            setPageRange(0)
+                                        }}
+                                        className="relative inline-flex items-center px-3 py-2 font-medium text-gray-600 hover:text-orange-600"
+                                        >
+                                        <span className="underline">First</span>
+                                        </button>
+                                        <button
+                                        onClick={()=>{
+                                            const min = 0
+                                            if (pageRange>min) {
+                                                setPageRange(pageRange-1)
+                                            }
+                                        }}
+                                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                                        >
+                                        <span className="sr-only">Previous</span>
+                                            <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                                        </button>
+                                        {/* Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
+
+                                        {pageNumbers.slice(pageRange*4, pageRange*4+4).map(el=>(
+                                            <button
+                                                onClick={()=>{
+                                                    setCurrentPage(el.number)
+                                                    setPageNumbers([...pageNumbers].map(val=>(val.number === el.number ? {...val,active:true} : {...val,active:false})))
+                                        
+                                                }}
+                                                aria-current="page"
+                                                className={classNames(el.active ? "z-20 bg-orange-100 border-orange-600 text-orange-900" : "z-10 bg-white border-gray-300 text-gray-600",
+                                                "relative inline-flex items-center px-4 py-2 border text-sm font-medium")}
+                                                >
+                                                {el.number}
+                                            </button>
+                                        ))}
+                                        <button
+                                        onClick={()=>{
+                                            const max = Math.ceil(pageNumbers.length/4)-1
+                                            if (pageRange<max) {
+                                                setPageRange(pageRange+1)
+                                            }
+                                        }}
+                                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                                        >
+                                        <span className="sr-only">Next</span>
+                                        <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                                        </button>
+                                        <button
+                                            onClick={()=>{
+                                                const max = Math.ceil(pageNumbers.length/4)-1
+                                                setCurrentPage(pageNumbers.length)
+                                                setPageNumbers([...pageNumbers].map(val=>(val.number === pageNumbers.length ? {...val,active:true} : {...val,active:false})))
+                                                setPageRange(max)
+                                            }}
+                                            className="relative inline-flex items-center px-3 py-2 font-medium text-gray-600 hover:text-orange-600"
+                                            >
+                                            <span className="underline">Last</span>
+                                        </button>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </Page>

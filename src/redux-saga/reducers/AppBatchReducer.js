@@ -1,7 +1,7 @@
 import * as ActionType from '../constants/AppBatch'
 
 const INIT_STATE = {
-    batchs: [],
+    batches: [],
     batch:{},
     talents:[],
     trainers:[],
@@ -82,7 +82,7 @@ const AppBatchReducer = (state = INIT_STATE, action) => {
 const applyGetBatchSucceed = (state, action) => {
     return {
         ...state,
-        batchs: action.payload,
+        batches: action.payload,
         batch:{},
         talents:[],
         trainers:[],
@@ -98,7 +98,7 @@ const applyAddBatchSucceed = (state, action) => {
 const applyEditBatchStatusSucceed = (state, action) => {
     return {
         ...state,
-        batchs: action.payload,
+        batches: action.payload,
         isLoading: false,
         isRefresh: false
     }
@@ -107,10 +107,10 @@ const applyEditBatchStatusSucceed = (state, action) => {
 
 const applyDeleteBatchSucceed = (state, action) => {
     const { payload } = action;
-    const filterBatch= state.batchs.filter(el => el.batch_id !== payload)
+    const filterBatch= state.batches.filter(el => el.batch_id !== payload)
     return {
         ...state,
-        batchs : [...filterBatch],
+        batches : [...filterBatch],
         isLoading: false,
         isRefresh : true
     }
@@ -130,7 +130,7 @@ const applyGetBatchIdSucceed = (state, action) => {
 const applyEditBatchSucceed = (state, action) => {
     return {
         ...state,
-        batchs: action.payload,
+        batches: action.payload,
         isLoading: false,
         isRefresh: false
     }
