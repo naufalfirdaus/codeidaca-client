@@ -2,7 +2,7 @@ import React from "react";
 import { StarIcon } from "@heroicons/react/solid";
 import StarIconOutlined from "@heroicons/react/outline/StarIcon";
 import config from "../../config/config";
-
+import { Link } from 'react-router-dom'
 
 
 export default function CardCurriculum(props) {
@@ -19,7 +19,7 @@ export default function CardCurriculum(props) {
                   <div >
                       <img
                        className="h-24 w-auto" 
-                        src={process.env.PUBLIC_URL + `/img/logo1.png`} 
+                        src={props.logo}
                       />
                   </div>
             </div>
@@ -38,7 +38,7 @@ export default function CardCurriculum(props) {
                  <p>{props.harga}</p>
             </div>
             <div className="link">
-                <a href="curriculum">{props.link}</a>
+                <Link to="/curriculum/:id">{props.link}</Link>
             </div>
             
         </div>

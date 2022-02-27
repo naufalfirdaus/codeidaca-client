@@ -2,6 +2,7 @@ import * as ActionType from '../constants/Curr'
 
 const INIT_STATE = {
     curriculum: [],
+    curr:{},
     isLoading: false,
     isRefresh: false
 }
@@ -27,6 +28,7 @@ const filCurriculumSucceed = (state, action) => {
     return {
         ...state,
         curriculum: action.payload,
+        curr: {},
         isLoading: false,
         isRefresh: false
     }
