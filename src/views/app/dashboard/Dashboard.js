@@ -20,6 +20,12 @@ import {
 } from "../../../redux-saga/actions/DashboardAction";
 import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip, BarChart, Bar,  XAxis, YAxis, CartesianGrid, LineChart,
   Line, } from "recharts";
+import JurusanChart from "./JurusanChart";
+import PendidikanChart from "./PendidikanChart";
+import UniversitasChart from "./UniversitasChart";
+import InterestChart from "./InterestChart";
+import ApplicantChart from "./ApplicantChart";
+import BoardIdleChart from "./BoardIdleChart";
 
 export default function Dashboard() {
   let navigate = useNavigate();
@@ -80,9 +86,9 @@ export default function Dashboard() {
                     stroke="currentColor"
                     fill="none"
                     stroke-width="2"
-                    viewbox="0 0 24 24"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     class="stroke-current text-gray-500"
                     height="24"
                     width="24"
@@ -197,18 +203,18 @@ export default function Dashboard() {
                 <div class="flex flex-row items-center justify-between mb-6">
                   <div class="flex flex-col">
                     <div className="text-sm font-light text-gray-500">
-                      Session
+                      
                     </div>
                     <div className="text-sm font-bold">
-                      <span>Applicant By Month</span>
+                      <span>APPLICANT BY MONTH</span>
                     </div>
                   </div>
                 </div>
                 <div class="flex flex-row w-full">
                   <div class="h-60">
-                    <div class="recharts-responsive-container w-full object-center">
+                    <div class="recharts-responsive-container w-96 object-center">
                         <div class="object-center px-14 ">
-                        <Applicant />
+                        <ApplicantChart />
                         </div>
                       {/* <div class="recharts-wrapper position: relative; cursor: default; w-80 h-60"> */}
                         
@@ -225,10 +231,10 @@ export default function Dashboard() {
                 <div class="flex flex-row items-center justify-between mb-6">
                   <div class="flex flex-col">
                     <div className="text-sm font-light text-gray-500">
-                    Interest Technology
+                    
                     </div>
                     <div className="text-sm font-bold">
-                      <span>Interest Technology</span>
+                      <span>INTEREST TECHNOLOGY</span>
                     </div>
                   </div>
                 </div>
@@ -236,7 +242,7 @@ export default function Dashboard() {
                   <div class="w-full h-60">
                     <div class="recharts-responsive-container h-full w-full object-center">
                         <div class="object-center px-14">
-                        <Interest />
+                        <InterestChart />
                         </div>
                       {/* <div class="recharts-wrapper position: relative; cursor: default; w-80 h-60"> */}
                         
@@ -252,10 +258,10 @@ export default function Dashboard() {
                 <div class="flex flex-row items-center justify-between mb-6">
                   <div class="flex flex-col">
                     <div className="text-sm font-light text-gray-500">
-                      Session
+                      
                     </div>
                     <div className="text-sm font-bold">
-                      <span>Boarding Vs Idle</span>
+                      <span>BOARDING VS IDLE</span>
                     </div>
                   </div>
                 </div>
@@ -264,7 +270,7 @@ export default function Dashboard() {
                     <div class="recharts-responsive-container h-full w-full object-center">
                         <div class="object-center px-14">
                           
-                        <BoardIdle />
+                        <BoardIdleChart />
                         
                         </div>
                       {/* <div class="recharts-wrapper position: relative; cursor: default; w-80 h-60"> */}
@@ -285,10 +291,10 @@ export default function Dashboard() {
                 <div class="flex flex-row items-center justify-between mb-6">
                   <div class="flex flex-col">
                     <div className="text-sm font-light text-gray-500">
-                      Session
+                      
                     </div>
                     <div className="text-sm font-bold">
-                      <span>Pendidikan</span>
+                      <span >PENDIDIKAN</span>
                     </div>
                   </div>
                 </div>
@@ -296,7 +302,7 @@ export default function Dashboard() {
                   <div class="w-full h-60">
                     <div class="recharts-responsive-container h-full w-full object-center">
                         <div class="object-center px-14">
-                        <Pendidikan />
+                        <PendidikanChart />
                         </div>
                       {/* <div class="recharts-wrapper position: relative; cursor: default; w-80 h-60"> */}
                         
@@ -313,10 +319,10 @@ export default function Dashboard() {
                 <div class="flex flex-row items-center justify-between mb-6">
                   <div class="flex flex-col">
                     <div className="text-sm font-light text-gray-500">
-                      Session
+                      
                     </div>
                     <div className="text-sm font-bold">
-                      <span>Universitas</span>
+                      <span>UNIVERSITAS</span>
                     </div>
                   </div>
                 </div>
@@ -324,7 +330,7 @@ export default function Dashboard() {
                   <div class="w-full h-60">
                     <div class="recharts-responsive-container h-full w-full object-center">
                         <div class="object-center px-14">
-                        <Universitas/>
+                        <UniversitasChart />
                         </div>
                       {/* <div class="recharts-wrapper position: relative; cursor: default; w-80 h-60"> */}
                         
@@ -340,10 +346,10 @@ export default function Dashboard() {
                 <div class="flex flex-row items-center justify-between mb-6">
                   <div class="flex flex-col">
                     <div className="text-sm font-light text-gray-500">
-                      Session
+                      
                     </div>
                     <div className="text-sm font-bold">
-                      <span>Jurusan</span>
+                      <span>JURUSAN</span>
                     </div>
                   </div>
                 </div>
@@ -351,7 +357,7 @@ export default function Dashboard() {
                   <div class="w-full h-60">
                     <div class="recharts-responsive-container h-full w-full object-center">
                         <div class="object-center px-14">
-                        <Jurusan />
+                        <JurusanChart />
                         </div>
                       {/* <div class="recharts-wrapper position: relative; cursor: default; w-80 h-60"> */}
                         

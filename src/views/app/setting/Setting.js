@@ -1,175 +1,232 @@
 import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css"
 import React, { useState, useEffect } from 'react';
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import config from "../../../config/config";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, NavLink, Link, Navigate } from 'react-router-dom';
-import { doGetTalentRequest, doUpdateTalentRequest } from "../../../redux-saga/actions/AppSettingAction";
+import { doGetTalentRequest, doUpdateTalentRequest, doUpdateTalentNoFileRequest } from "../../../redux-saga/actions/AppSettingAction";
 
-export default function SettingProfile(){
-    const [birthDate, setBirthDate] = useState(new Date());
-    const [previewImg, setPreviewImg] = useState();
-    const [uploaded, setUploaded] = useState(false);
+export default function SettingProfile() {
+
+    const [fileResume, setFileResume] = useState(false);
+    const [fileCandidateResume, setCandidateResume] = useState(false);
     const dispatch = useDispatch();
     let navigate = useNavigate
-    const {userProfile} = useSelector((state) => state.userState)
-    const {talent} = useSelector((state) => state.talentState)
-    const onClearImage = event =>{
-        event.preventDefault();
-        setUploaded(false);
-        setPreviewImg(null)
-    }
+    const { userProfile } = useSelector((state) => state.userState)
+    const { talent } = useSelector((state) => state.talentState)
+    const pendidikan = ["SMK", "D3", "S1"]
+    const bootcamp = ["NodeJS", "Golang"]
 
-    // const Pendidikan = [
-    //     { name: 'SMK' },
-    //     { name: 'D3' },
-    //     { name: 'S1' }
-    // ]
-
-    const pendidikan  = ['SMK', 'D3', 'S1']
-
-    const bootcamp = ['NodeJS', '.Net', 'Golang']
-
-    
-
-    useEffect(()=>{
-        //dispatch(doGetTalentRequest(2))
+    useEffect(() => {
         dispatch(doGetTalentRequest(userProfile.userId))
-    }, []); 
+    }, []);
 
     const validationSchema = Yup.object().shape({
-        // tale_fullname: Yup
-        // .string("Enter Fullname")
-        // .required('Fullname is required'),
-        // tale_email: Yup
-        // .string("Please enter your email")
-        // .required('Email is required'),
-        // tale_major: Yup
-        // .string("Tolong isi data jurusan")
-        // .required('Jurusan is required'),
-        // tale_city: Yup
-        // .string("Tolong isi data kota")
-        // .required('City is required'),
-        // tale_school_name: Yup
-        // .string('Tolong isi data Universitas')
-        // .required('University is required'),
-        // tale_graduate: Yup
-        // .number().min(1997).default(0),
-        // tale_gpa: Yup
-        // .number().min(1).default(0),
-        // tale_province: Yup
-        // .string('Tolong isi data Daerah')
-        // .required('Province is required'),
-
+        tale_fullname: Yup
+            .string("Enter Fullname")
+            .required('Fullname is required'),
+        tale_email: Yup
+            .string("Please enter your email")
+            .required('Email is required'),
+        tale_major: Yup
+            .string("Tolong isi data jurusan")
+            .required('Jurusan is required'),
+        tale_city: Yup
+            .string("Tolong isi data kota")
+            .required('City is required'),
+        tale_school_name: Yup
+            .string('Tolong isi data Universitas')
+            .required('University is required'),
+        tale_graduate: Yup
+            .number().min((new Date().getFullYear() - 5)).default(0),
+        tale_gpa: Yup
+            .number().min(1).default(0),
+        tale_province: Yup
+            .string('Tolong isi data Daerah')
+            .required('Province is required'),
+        tale_tag_skill: Yup
+            .string('Tolong isi data skill')
+            .required('Data is required')
     })
 
 
-
     const formik = useFormik({
-       enableReinitialize:true,
+        enableReinitialize: true,
         initialValues: {
-        tale_fullname: talent.tale_fullname,
-        tale_email: talent.tale_email,
-        tale_education: talent.tale_education,
-        tale_major: talent.tale_major,
-        tale_city: talent.tale_city,
-        tale_bootcamp: talent.tale_bootcamp,
-        tale_resume: talent.tale_resume,
-        tale_candidat_resume: talent.tale_candidat_resume,
-        tale_birthdate: talent.tale_birthdate,
-        tale_handphone: talent.tale_handphone,
-        tale_school_name: talent.tale_school_name,
-        tale_graduate: talent.tale_graduate,
-        tale_gpa: talent.tale_gpa,
-        tale_province: talent.tale_province,
-        tale_tag_skill: talent.tale_tag_skill,
+            tale_fullname: talent.tale_fullname,
+            tale_email: talent.tale_email,
+            tale_education: talent.tale_education,
+            tale_major: talent.tale_major,
+            tale_city: talent.tale_city,
+            tale_bootcamp: talent.tale_bootcamp,
+            tale_resume: talent.tale_resume,
+            tale_candidat_resume: talent.tale_candidat_resume,
+            tale_birthdate: talent.tale_birthdate && new Date(talent.tale_birthdate),
+            tale_handphone: talent.tale_handphone,
+            tale_school_name: talent.tale_school_name,
+            tale_graduate: talent.tale_graduate,
+            tale_gpa: talent.tale_gpa,
+            tale_province: talent.tale_province,
+            tale_tag_skill: talent.tale_tag_skill,
+            tale_resume_file: '',
+            tale_candidat_resume_file: '',
+            tale_date: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values) => {
+            const tglLahir = values.tale_birthdate.getFullYear() + '-' + (values.tale_birthdate.getMonth() + 1) + '-' + values.tale_birthdate.getDate()
+            if (fileResume === true || fileCandidateResume === true) {
+                let payload = new FormData();
+                payload.append('tale_fullname', values.tale_fullname);
+                payload.append('tale_birthdate', tglLahir);
+                payload.append('tale_education', values.tale_education);
+                payload.append('tale_major', values.tale_major);
+                payload.append('tale_school_name', values.tale_school_name);
+                payload.append('tale_handphone', values.tale_handphone);
+                payload.append('tale_bootcamp', values.tale_bootcamp);
+                payload.append('tale_graduate', parseInt(values.tale_graduate));
+                payload.append('tale_gpa', parseInt(values.tale_gpa));
+                payload.append('tale_city', values.tale_city);
+                payload.append('tale_province', values.tale_province);
+                payload.append('tale_tag_skill', values.tale_tag_skill);
+                payload.append('tale_resume', values.tale_resume_file);
+                payload.append('tale_candidat_resume', values.tale_candidat_resume_file);
+                payload.append('tale_user_id', parseInt(userProfile.userId))
+                dispatch(doUpdateTalentRequest(payload))
+            } else if (fileResume === true) {
+                let payload = new FormData();
+                payload.append('tale_fullname', values.tale_fullname);
+                payload.append('tale_birthdate', tglLahir);
+                payload.append('tale_education', values.tale_education);
+                payload.append('tale_major', values.tale_major);
+                payload.append('tale_school_name', values.tale_school_name);
+                payload.append('tale_handphone', values.tale_handphone);
+                payload.append('tale_bootcamp', values.tale_bootcamp);
+                payload.append('tale_graduate', parseInt(values.tale_graduate));
+                payload.append('tale_gpa', parseInt(values.tale_gpa));
+                payload.append('tale_city', values.tale_city);
+                payload.append('tale_province', values.tale_province);
+                payload.append('tale_tag_skill', values.tale_tag_skill);
+                payload.append('tale_resume', values.tale_resume_file);
+                payload.append('tale_user_id', parseInt(userProfile.userId))
+                dispatch(doUpdateTalentRequest(payload))
+            } else if (fileCandidateResume === true) {
+                let payload = new FormData();
+                payload.append('tale_fullname', values.tale_fullname);
+                payload.append('tale_birthdate', tglLahir);
+                payload.append('tale_education', values.tale_education);
+                payload.append('tale_major', values.tale_major);
+                payload.append('tale_school_name', values.tale_school_name);
+                payload.append('tale_handphone', values.tale_handphone);
+                payload.append('tale_bootcamp', values.tale_bootcamp);
+                payload.append('tale_graduate', parseInt(values.tale_graduate));
+                payload.append('tale_gpa', parseInt(values.tale_gpa));
+                payload.append('tale_city', values.tale_city);
+                payload.append('tale_province', values.tale_province);
+                payload.append('tale_tag_skill', values.tale_tag_skill);
+                payload.append('tale_candidat_resume', values.tale_candidat_resume_file);
+                payload.append('tale_user_id', parseInt(userProfile.userId))
+                dispatch(doUpdateTalentRequest(payload))
+            } else {
+                const payload = {
+                    tale_fullname: values.tale_fullname,
+                    tale_birthdate: values.tale_birthdate,
+                    tale_education: values.tale_education,
+                    tale_major: values.tale_major,
+                    tale_school_name: values.tale_school_name,
+                    tale_handphone: values.tale_handphone,
+                    tale_bootcamp: values.tale_bootcamp,
+                    tale_graduate: parseInt(values.tale_graduate),
+                    tale_gpa: parseInt(values.tale_gpa),
+                    tale_city: values.tale_city,
+                    tale_province: values.tale_province,
+                    tale_tag_skill: values.tale_tag_skill,
+                    tale_resume: values.tale_resume,
+                    tale_candidat_resume: values.tale_candidat_resume,
+                    tale_user_id: parseInt(userProfile.userId)
+                }
+                dispatch(doUpdateTalentNoFileRequest(payload))
+            }
 
-       },
-       validationSchema: validationSchema,
-       onSubmit: async(values) => {
-           values.tale_birthdate = birthDate;
-           let payload = new FormData();
+            navigate('app', { state: { refresh: true } })
+        }
 
-           payload.append('tale_fullname',values.tale_fullname);  
-           payload.append('tale_birthdate',values.tale_birthdate);   
-           payload.append('tale_education', values.tale_education); 
-           payload.append('tale_major', values.tale_major);
-           payload.append('tale_school_name', values.tale_school_name);
-           payload.append('tale_handphone', values.tale_handphone);
-           payload.append('tale_bootcamp', values.tale_bootcamp);
-           payload.append('tale_graduate', parseInt(values.tale_graduate));
-           payload.append('tale_gpa', parseInt(values.tale_gpa));
-           payload.append('tale_city', values.tale_city);
-           payload.append('tale_province', values.tale_province);
-           payload.append('tale_tag_skill', values.tale_tag_skill);
-           payload.append('tale_candidat_resume', values.tale_candidat_resume);
-           payload.append('tale_resume', values.tale_resume);
-
-            //payload.append('tale_email', values.tale_email);
-
-            
-            payload.append('tale_user_id', parseInt(userProfile.userId))
-
-            dispatch(doUpdateTalentRequest(payload))
-
-
-            navigate('app/dashboard', {state: {refresh:true}})
-       }
-        
     });
 
-    // useEffect(() => {
-    // formik.touched.tale_fullname=talent.fullname
-     
-      
-    // }, [talent])
-    
 
-
-
-    const uploadOnChange = name => event => {
+    const uploadOnChangeResume = name => event => {
         let reader = new FileReader();
         let file = event.target.files[0];
 
         reader.onloadend = () => {
-            formik.setFieldValue('prod_images', file);
-            setPreviewImg(reader.result)
+            formik.setFieldValue('tale_resume_file', file);
+
+            console.log(file);
         }
 
         reader.readAsDataURL(file);
-        setUploaded(true);
+        setFileResume(true);
+    }
+
+    const uploadOnChangeCandidatResume = name => event => {
+        let reader = new FileReader();
+        let file = event.target.files[0];
+
+        reader.onloadend = () => {
+            formik.setFieldValue('tale_candidat_resume_file', file);
+
+        }
+
+        reader.readAsDataURL(file);
+        setCandidateResume(true);
 
     }
 
-    return(
+
+
+    return (
         <div>
-<div className="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
-            <div className="flex-1 min-w-0">
-                <h1 className="text-lg font-medium leading-6 text-gray-900 sm:truncate">Setting Profile</h1>
+            <div className="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
+                <div className="flex-1 min-w-0">
+                    <h1 className="text-lg font-medium leading-6 text-gray-900 sm:truncate">Setting Profile</h1>
+                </div>
+                <div className="mt-4 flex sm:mt-0 sm:ml-4">
+                    <button
+                        onClick={() => navigate(-1)}
+                        type="button"
+                        className="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3"
+                    >
+                        Back
+                    </button>
+                </div>
             </div>
-            <div className="mt-4 flex sm:mt-0 sm:ml-4">
-                <button
-                    
-                    type="button"
-                    className="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3"
-                >
-                    Back
-                </button>
-            </div>
-        </div>
-        {/* contain page */}
-        {/* <div className="px-4 mt-6 sm:px-6 lg:px-8">
+            {/* contain page */}
+            {/* <div className="px-4 mt-6 sm:px-6 lg:px-8">
             <div className="hidden mt-8 sm:block">
                 <div className="align-middle inline-block min-w-full border-b border-gray-200">
                     
                 </div>
             </div>
         </div> */}
-        <div className='mt-5 md:mt-0 md:col-span-2'>
+            <div className='mt-5 md:mt-0 md:col-span-2'>
                 <form action="#" method="POST">
                     <div className='shadow overflow-hidden sm:rounded-md'>
                         <div className="px-10 py-5 bg-white sm:p-6">
                             <div className='sm:flex-1 lg:grid grid-cols-6 gap-6'>
+                                {/* <div className="col-span-6 sm:col-span-1 lg:row-start-1 row-end-4 col-start-4">
+                                <div class="relative w-36 h-36">
+                                    <img class="rounded-full border border-gray-100 shadow-sm" src="https://randomuser.me/api/portraits/women/81.jpg" alt="user image" />
+                                 </div>
+                                </div> */}
+                                <div className="col-span-6 sm:col-span-1 lg:col-start-5 row-start-1 row-span-3">
+                                    <div class="relative w-36 h-36">
+                                        <img class="h-36 w-36 border border-gray-100 shadow-sm object-scale-down" src={`${config.urlFile}/${talent.tale_photo}`} alt="user image" />
+                                    </div>
+                                </div>
+
+
                                 <div className="col-span-6 sm:col-span-2">
                                     <label htmlFor="tale_fullname" className="block text-sm font-medium text-gray-700">
                                         Fullname
@@ -188,6 +245,8 @@ export default function SettingProfile(){
                                         <span className="mt-2 text-sm text-red-600">{formik.errors.tale_fullname}</span>
                                     ) : null}
                                 </div>
+
+                                
                                 <div className="col-span-6 row-start-2 sm:col-span-2">
                                     <label htmlFor="tale_email" className="block text-sm font-medium text-gray-700">
                                         Email
@@ -200,6 +259,7 @@ export default function SettingProfile(){
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
                                         autoComplete="tale_email"
+                                        disabled
                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                     />
                                     {formik.touched.tale_email && formik.errors.tale_email ? (
@@ -220,9 +280,9 @@ export default function SettingProfile(){
                                         autoComplete="tale_education"
                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                     >
-                                        <option>Pendidikan</option>
+
                                         {
-                                            pendidikan.map((value, index) => 
+                                            pendidikan.map((value, index) =>
                                                 <option value={value} key={index}>{value}</option>
                                             )
                                         }
@@ -273,16 +333,16 @@ export default function SettingProfile(){
                                         Joint Bootcamp
                                     </label>
                                     <select
-                                         name="tale_bootcamp"
-                                         id="tale_bootcamp"
-                                         value={formik.values.tale_bootcamp}
-                                         onChange={formik.handleChange}
-                                         onBlur={formik.handleBlur}
-                                         autoComplete="tale_bootcamp"
-                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        name="tale_bootcamp"
+                                        id="tale_bootcamp"
+                                        value={formik.values.tale_bootcamp}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        autoComplete="tale_bootcamp"
+                                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                     >
                                         {
-                                            bootcamp.map((value, index) => 
+                                            bootcamp.map((value, index) =>
                                                 <option value={value} key={index}>{value}</option>
                                             )
                                         }
@@ -294,15 +354,17 @@ export default function SettingProfile(){
                                         Resume
                                     </label>
                                     <input
-                                       type="file"
-                                       name="tale_resume"
-                                       id="tale_resume"
-                                       value={formik.values.tale_resume}
-                                       onChange={formik.handleChange}
-                                       onBlur={formik.handleBlur}
-                                       autoComplete="tale_resume"
-                                       className="from-control block w-full px-2 py-1 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                        type="file"
+                                        name="tale_resume"
+                                        id="tale_resume"
+                                        //value="{formik.values.tale_resume.name}"
+                                        onChange={uploadOnChangeResume('file')}
+                                        onBlur={formik.handleBlur}
+                                        autoComplete="tale_resume"
+                                        accept="application/pdf"
+                                        className="from-control block w-full px-2 py-1 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                     />
+                                    <div>{formik.values.tale_resume}</div>
                                     {formik.touched.tale_resume && formik.errors.tale_resume ? (
                                         <span className="mt-2 text-sm text-red-600">{formik.errors.tale_resume}</span>
                                     ) : null}
@@ -316,31 +378,29 @@ export default function SettingProfile(){
                                         type="file"
                                         name="tale_candidat_resume"
                                         id="tale_candidat_resume"
-                                        value={formik.values.tale_candidat_resume}
-                                        onChange={formik.handleChange}
+                                        //value={formik.values.tale_candidat_resume}
+                                        onChange={uploadOnChangeCandidatResume('file')}
                                         onBlur={formik.handleBlur}
                                         autoComplete="tale_candidat_resume"
+                                        accept="application/pdf"
                                         className="from-control block w-full px-2 py-1 text-sm font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                     />
+                                    <label>{formik.values.tale_candidat_resume}</label>
                                     {formik.touched.tale_candidat_resume && formik.errors.tale_candidat_resume ? (
                                         <span className="mt-2 text-sm text-red-600">{formik.errors.tale_candidat_resume}</span>
                                     ) : null}
                                 </div>
 
-                                
+
 
                                 <div className="col-span-6 sm:col-span-1 lg:col-span-2">
                                     <label htmlFor="tale_birthdate" className="block text-sm font-medium text-gray-700">
                                         Birth Date
                                     </label>
-                                    <input 
-                                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    type="date"
-                                    selected={formik.values.tale_birthdate}></input>
-                                    {/* <DatePicker
+                                    <DatePicker
                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                        selected={birthDate}
-                                        onChange={(date) => setBirthDate(date)} /> */}
+                                        selected={formik.values.tale_birthdate}
+                                        onChange={(date) => formik.setFieldValue('tale_birthdate', date)} />
                                 </div>
 
 
@@ -366,7 +426,7 @@ export default function SettingProfile(){
 
                                 <div className="col-span-6 row-start-3 sm:col-span-2">
                                     <label htmlFor="tale_school_name" className="block text-sm font-medium text-gray-700">
-                                        Pendidikan
+                                        Nama Sekolah
                                     </label>
                                     <input
                                         type="text"
@@ -464,23 +524,27 @@ export default function SettingProfile(){
                                     ) : null}
                                 </div>
 
-                                <div className="col-span-6 sm:col-span-1 lg:row-start-1 row-end-4 col-start-4">
-                                <div class="relative w-36 h-36">
-                                    <img class="rounded-full border border-gray-100 shadow-sm" src="https://randomuser.me/api/portraits/women/81.jpg" alt="user image" />
-                                 </div>
-                                </div>
-                                
 
+                                {/* <div className="col-span-6 sm:col-span-1 lg:row-start-1 row-end-4 col-6">
+                                    <div class="relative w-36 h-36">
+                                        <img class="h-36 w-36 border border-gray-100 shadow-sm object-scale-down" src={`${config.urlFile}/${talent.tale_photo}`} alt="user image" />
+                                    </div>
+                                </div> */}
 
+                                {/* <div className="col-span-6 sm:col-span-1 lg:row-start-1 row-end-4 col-6">
+                                    <div class="relative w-36 h-36">
+                                        <img class="rounded-full border border-gray-100 shadow-sm" src="https://randomuser.me/api/portraits/women/81.jpg" alt="user image" />
+                                    </div>
+                                </div> */}
 
                             </div>
                         </div>
+
                         <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
                             <button
                                 type="button"
                                 onClick={formik.handleSubmit}
                                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-
                             >
                                 Save
                             </button>

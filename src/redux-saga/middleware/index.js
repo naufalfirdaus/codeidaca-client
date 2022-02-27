@@ -5,7 +5,7 @@ import * as ActionTypeTalent from '../constants/AppSettingConstant'
 
 import {handleSignup,handleSignin,handleSignout} from './UserSaga'
 import {handleGetApplicant, handleGetBoardidle, handleGetInterest, handleGetJurusan, handleGetPendidikan, handleGetSummary, handleGetUniversitas} from './DashboardSaga'
-import {handleGetTalent, handleUpdateTalent} from './AppSettingSaga'
+import {handleGetTalent, handleUpdateTalent, handleUpdateTalentNoFile} from './AppSettingSaga'
 
 function *watchAll() {
   yield all([
@@ -20,7 +20,8 @@ function *watchAll() {
     takeEvery(ActionTypeDashboard.GET_INTEREST_REQUEST, handleGetInterest),
     takeEvery(ActionTypeDashboard.GET_APPLICANT_REQUEST, handleGetApplicant),
     takeEvery(ActionTypeTalent.GET_TALENT_REQUEST, handleGetTalent),
-    takeEvery(ActionTypeTalent.UPDATE_TALENT_REQUEST, handleUpdateTalent)
+    takeEvery(ActionTypeTalent.UPDATE_TALENT_REQUEST, handleUpdateTalent),
+    takeEvery(ActionTypeTalent.UPDATE_TALENTNOFILE_REQUEST, handleUpdateTalentNoFile)
   ])
 }
 

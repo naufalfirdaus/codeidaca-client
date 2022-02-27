@@ -5,81 +5,112 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, NavLink, Link } from 'react-router-dom';
 import { doGetTalentRequest, doUpdateTalentRequest } from "../../../redux-saga/actions/AppSettingAction";
+import config from "../../../config/config";
 
-export default function SettingProfile(){
+export default function SettingProfile() {
     const [birthDate, setBirthDate] = useState(new Date());
     const [previewImg, setPreviewImg] = useState();
     const [uploaded, setUploaded] = useState(false);
+    const [attrb,setAttrb] = useState();
+
     const dispatch = useDispatch();
     //const {userProfile} = useSelector((state) => state.UserState)
-    const {talent} = useSelector((state) => state.talentState)
-    const onClearImage = event =>{
+    const { talent } = useSelector((state) => state.talentState)
+    const onClearImage = event => {
         event.preventDefault();
         setUploaded(false);
         setPreviewImg(null)
     }
 
-    
 
-    useEffect(()=>{
+
+    useEffect(() => {
         dispatch(doGetTalentRequest(2))
         //dispatch(doGetTalentRequest(userProfile.userId))
-    }, []); 
+    }, []);
+
+    useEffect(() => {
+        if (talent) {
+
+            setAttrb({
+                tale_fullname: talent.tale_fullname,
+                tale_email: talent.tale_email,
+                tale_education: talent.tale_education,
+                tale_major: talent.tale_major,
+                tale_city: talent.tale_city,
+                tale_bootcamp: talent.tale_bootcamp,
+                tale_resume: talent.tale_resume,
+                tale_candidat_resume: talent.tale_candidat_resume,
+                tale_birthdate: talent.tale_birthdate,
+                tale_handphone: talent.tale_handphone,
+                tale_school_name: talent.tale_school_name,
+                tale_graduate: talent.tale_graduate,
+                tale_gpa: talent.tale_gpa,
+                tale_province: talent.tale_province,
+                tale_tag_skill: talent.tale_tag_skill,
+            });
+            let img = `${config.urlImage}/${talent.tale_photo}`
+            setPreviewImg(img);
+            setUploaded(true);
+
+        }
+
+    }, [talent]);
 
     const validationSchema = Yup.object().shape({
         tale_fullname: Yup
-        .string("Enter Fullname")
-        .required('Fullname is required'),
+            .string("Enter Fullname")
+            .required('Fullname is required'),
         tale_email: Yup
-        .string("Please enter your email")
-        .required('Email is required'),
+            .string("Please enter your email")
+            .required('Email is required'),
         tale_major: Yup
-        .string("Tolong isi data jurusan")
-        .required('Jurusan is required'),
+            .string("Tolong isi data jurusan")
+            .required('Jurusan is required'),
         tale_city: Yup
-        .string("Tolong isi data kota")
-        .required('City is required'),
+            .string("Tolong isi data kota")
+            .required('City is required'),
         tale_school_name: Yup
-        .string('Tolong isi data Universitas')
-        .required('University is required'),
+            .string('Tolong isi data Universitas')
+            .required('University is required'),
         tale_graduate: Yup
-        .number().min(1997).default(0),
+            .number().min(1997).default(0),
         tale_gpa: Yup
-        .number().min(1).default(0),
+            .number().min(1).default(0),
         tale_province: Yup
-        .string('Tolong isi data Daerah')
-        .required('Province is required'),
+            .string('Tolong isi data Daerah')
+            .required('Province is required'),
 
     })
 
 
 
     const formik = useFormik({
-       enableReinitialize:true,
+        enableReinitialize: true,
         initialValues: {
-        tale_fullname: talent.tale_fullname,
-        tale_email: talent.tale_email,
-        tale_education: talent.tale_education,
-        tale_major: talent.tale_major,
-        tale_city: talent.tale_city,
-        tale_bootcamp: talent.tale_bootcamp,
-        tale_resume: talent.tale_resume,
-        tale_candidat_resume: talent.tale_candidat_resume,
-        tale_birthdate: talent.tale_birthdate,
-        tale_handphone: talent.tale_handphone,
-        tale_school_name: talent.tale_school_name,
-        tale_graduate: talent.tale_graduate,
-        tale_gpa: talent.tale_gpa,
-        tale_province: talent.tale_province,
-        tale_tag_skill: talent.tale_tag_skill,
+            tale_fullname: talent.tale_fullname,
+            tale_email: talent.tale_email,
+            tale_education: talent.tale_education,
+            tale_major: talent.tale_major,
+            tale_city: talent.tale_city,
+            tale_bootcamp: talent.tale_bootcamp,
+            tale_resume: talent.tale_resume,
+            tale_candidat_resume: talent.tale_candidat_resume,
+            tale_birthdate: talent.tale_birthdate,
+            tale_handphone: talent.tale_handphone,
+            tale_school_name: talent.tale_school_name,
+            tale_graduate: talent.tale_graduate,
+            tale_gpa: talent.tale_gpa,
+            tale_province: talent.tale_province,
+            tale_tag_skill: talent.tale_tag_skill,
 
-       },
-       validationSchema: validationSchema,
-       onSubmit: async(values) => {
-           values.tale_birthdate = birthDate;
-           let payload = new FormData();
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values) => {
+            values.tale_birthdate = birthDate;
+            let payload = new FormData();
 
-           payload.append('tale_fullname',values.tale_fullname);   
+            payload.append('tale_fullname', values.tale_fullname);
             payload.append('tale_email', values.tale_email);
             payload.append('tale_education', values.tale_education);
             payload.append('tale_major', values.tale_major);
@@ -95,16 +126,16 @@ export default function SettingProfile(){
             payload.append('tale_tag_skill', values.tale_tag_skill);
 
             dispatch(doUpdateTalentRequest(payload))
-       }
-        
+        }
+
     });
 
     // useEffect(() => {
     // formik.touched.tale_fullname=talent.fullname
-     
-      
+
+
     // }, [talent])
-    
+
 
 
 
@@ -122,31 +153,31 @@ export default function SettingProfile(){
 
     }
 
-    return(
+    return (
         <div>
-<div className="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
-            <div className="flex-1 min-w-0">
-                <h1 className="text-lg font-medium leading-6 text-gray-900 sm:truncate">Setting Profile</h1>
+            <div className="border-b border-gray-200 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
+                <div className="flex-1 min-w-0">
+                    <h1 className="text-lg font-medium leading-6 text-gray-900 sm:truncate">Setting Profile</h1>
+                </div>
+                <div className="mt-4 flex sm:mt-0 sm:ml-4">
+                    <button
+
+                        type="button"
+                        className="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3"
+                    >
+                        Back
+                    </button>
+                </div>
             </div>
-            <div className="mt-4 flex sm:mt-0 sm:ml-4">
-                <button
-                    
-                    type="button"
-                    className="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3"
-                >
-                    Back
-                </button>
-            </div>
-        </div>
-        {/* contain page */}
-        {/* <div className="px-4 mt-6 sm:px-6 lg:px-8">
+            {/* contain page */}
+            {/* <div className="px-4 mt-6 sm:px-6 lg:px-8">
             <div className="hidden mt-8 sm:block">
                 <div className="align-middle inline-block min-w-full border-b border-gray-200">
                     
                 </div>
             </div>
         </div> */}
-        <div className='mt-5 md:mt-0 md:col-span-2'>
+            <div className='mt-5 md:mt-0 md:col-span-2'>
                 <form action="#" method="POST">
                     <div className='shadow overflow-hidden sm:rounded-md'>
                         <div className="px-10 py-5 bg-white sm:p-6">
@@ -307,16 +338,16 @@ export default function SettingProfile(){
                                     ) : null} */}
                                 </div>
 
-                                
+
 
                                 <div className="col-span-6 sm:col-span-1 lg:col-span-2">
                                     <label htmlFor="tale_birthdate" className="block text-sm font-medium text-gray-700">
                                         Birth Date
                                     </label>
-                                    <input 
-                                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    type="date"
-                                    selected={formik.values.tale_birthdate}></input>
+                                    <input
+                                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        type="date"
+                                        selected={formik.values.tale_birthdate}></input>
                                     {/* <DatePicker
                                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                         selected={birthDate}

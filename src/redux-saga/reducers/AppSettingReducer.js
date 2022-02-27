@@ -25,6 +25,14 @@ const AppSettingReducer = (state = INIT_STATE, action) => {
         case ActionType.UPDATE_TALENT_SUCCEED:
             return applyUpdateTalentSucceed(state, action)
 
+        case ActionType.UPDATE_TALENTNOFILE_REQUEST:
+            return {
+                ...state,
+                isLoading: true
+            }
+        case ActionType.UPDATE_TALENTNOFILE_SUCCEED:
+            return applyUpdateTalentNoFileSucceed(state, action)
+
         default:
             return state;
     }
@@ -33,13 +41,25 @@ const AppSettingReducer = (state = INIT_STATE, action) => {
 const applyGetTalentSucceed = (state, action) => {
     return {
         ...state,
-        talent: {...action.payload},
+        talent: { ...action.payload },
         isLoading: false,
         isRefresh: false
     }
 }
 
 const applyUpdateTalentSucceed = (state, action) => {
+    // let { payload } = action;
+    const { payload } = action;
+    return {
+        ...state,
+        // talent: action.payload,
+        talent: payload,
+        isLoading: false,
+        isRefresh: false
+    }
+}
+
+const applyUpdateTalentNoFileSucceed = (state, action) => {
     // let { payload } = action;
     const { payload } = action;
     return {

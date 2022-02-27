@@ -15,6 +15,21 @@ export const doUpdateTalentFailed = (payload) => ({
     payload
 })
 
+export const doUpdateTalentNoFileRequest = (payload) => ({
+    type: ActionType.UPDATE_TALENTNOFILE_REQUEST,
+    payload
+})
+
+export const doUpdateTalentNoFileSucceed = (payload) => ({
+    type: ActionType.UPDATE_TALENTNOFILE_SUCCEED,
+    payload
+})
+
+export const doUpdateTalentNoFileFailed = (payload) => ({
+    type: ActionType.UPDATE_TALENTNOFILE_FAILED,
+    payload
+})
+
 export const doGetTalentRequest =(payload)=>({
     type : ActionType.GET_TALENT_REQUEST,
     payload

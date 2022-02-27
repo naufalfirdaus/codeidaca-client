@@ -20,7 +20,19 @@ const updateTalent = async(payload) => {
     }
 }
 
+
+const updateTalentNoFile = async(payload) => {
+    const tale_user_id = payload.tale_user_id
+    try{
+        const result = await axios.put(`${config.domain}/talent/data/${payload.tale_user_id}`,payload)
+        return result
+    }catch(error){
+        return error;
+    }
+}
+
 export default{
     getTalent,
-    updateTalent
+    updateTalent,
+    updateTalentNoFile
 }

@@ -18,8 +18,11 @@ import Signup from './component/layout/Signup';
 import Jurusan from './views/app/dashboard/Jurusannn';
 import Jurusann from './views/app/dashboard/App';
 import Test from './views/app/dashboard/Jurusan';
-import Pendidikan from './views/app/dashboard/Interest';
+import Pendidikan from './views/app/dashboard/BoardIdle';
 import Profile from './views/app/talent/SettingProfile'
+import Chart from './views/app/dashboard/UniversitasChart';
+import ReactChart from './views/app/dashboard/UniversitasChart';
+
 
 export default function Routes(isLoggedIn) {
   return useRoutes([
@@ -54,7 +57,9 @@ export default function Routes(isLoggedIn) {
         { path: 'setting', element: isLoggedIn ? <Setting /> : <Navigate to="/auth/signin"/> },
         { path: 'jurusan', element: <Jurusan/>},
         { path: 'jurusann', element: <Pendidikan/>},
-        { path: 'test', element: <Test/>}
+        { path: 'test', element: <Test/>},
+        { path: 'chart', element: <Chart/>},
+        { path: 'rc', element: <ReactChart/>}
       ]
     },
     { path: '*', element: <Navigate to="/404" replace /> }

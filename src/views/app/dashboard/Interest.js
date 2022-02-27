@@ -4,7 +4,7 @@ import { doGetInterestRequest } from "../../../redux-saga/actions/DashboardActio
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 
-export default function Applicant() {
+export default function Interest() {
   const dispatch = useDispatch();
 
   const Bebas = useSelector((state) => state.dashboardState);
