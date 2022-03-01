@@ -7,16 +7,17 @@ const INIT_STATE = {
     isRefresh: false
 }
 
+
 const currReducer = (state = INIT_STATE, action) => {
     switch (action.type) {
-        case ActionType.curriculum_REQUEST:{
+        case ActionType.curriculumRequest:{
             return {
                 ...state,
                 isLoading: true
             }
         }
-        case ActionType.curriculum_SUCCEED:{
-            return filCurriculumSucceed(state, action)
+        case ActionType.curriculumSucceed:{
+            return GetCurriculumSucceed(state, action)
         }
 
         default:
@@ -24,7 +25,7 @@ const currReducer = (state = INIT_STATE, action) => {
     }
 }
 
-const filCurriculumSucceed = (state, action) => {
+const GetCurriculumSucceed = (state, action) => {
     return {
         ...state,
         curriculum: action.payload,

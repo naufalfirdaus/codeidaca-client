@@ -12,6 +12,8 @@ export default function CardCurriculum(props) {
     //         i < 5 ? <StarIcon key={i} /> : <StarIconOutlined key={i} />
     //     );
 
+
+
     return (
         <div className="border rounded-md max-w-md shadow-md dark:bg-red-500 border-red-500">
         <div className="px-10 pt-7 pb-7">

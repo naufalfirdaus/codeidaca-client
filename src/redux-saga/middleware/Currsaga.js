@@ -10,7 +10,7 @@ import {
 
 function* handleGetCurr(){
     try {
-        const result = yield call(apiCurriculum.findRow);
+        const result = yield call(apiCurriculum.findAll);
         yield put(curriculumSucceed(result))        
     } catch (error) {
         yield put(curriculumFailed(error));
