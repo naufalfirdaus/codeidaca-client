@@ -78,7 +78,7 @@ export default function LandingPage() {
                                         <span className="sr-only">codeid</span>
                                         <img
                                             className="h-8 w-auto sm:h-10"
-                                            src="./assets/images/codeid.png"
+                                            src="/assets/images/codeid.png"
                                             alt="codeid"
                                         />
                                     </Link>
@@ -339,7 +339,7 @@ export default function LandingPage() {
             <main>
 
                 {/* display contain page like bootcamp, hiring, talent in <Outlet/>*/}
-                <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                     <Outlet />
                 </div>
             </main>

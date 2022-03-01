@@ -113,7 +113,7 @@ export default function AppLayout() {
                             <div className="flex-shrink-0 flex items-center px-4">
                                 <img
                                     className="h-10 w-auto"
-                                    src="../assets/images/codeid.png"
+                                    src="/assets/images/codeid.png"
                                     alt="codeid"
                                 />
                             </div>
