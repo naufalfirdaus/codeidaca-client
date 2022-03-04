@@ -1,7 +1,9 @@
-import React from 'react';
+import React from "react";
 
 export default function bootcamp() {
-  return <div>
-      <h1>Bootcamp Page</h1>
-  </div>;
+    return (
+        <div>
+            <h1>Bootcamp Page</h1>
+        </div>
+    );
 }

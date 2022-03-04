@@ -6,6 +6,8 @@ import { useNavigate, NavLink, Link, useLocation } from "react-router-dom";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch, useSelector } from "react-redux";
+import { doGetTalentRequest } from "../../../redux-saga/actions/TalentAction";
 
 import {
     DotsVerticalIcon,
@@ -27,32 +29,22 @@ const columns = [
     { name: "Status" },
 ];
 
-export default function Talent() {
+export default function TalentSaga() {
     let navigate = useNavigate();
-    const [talents, setTalents] = useState([]);
     const [loading, setLoading] = useState(false);
-    let [refresh, setRefresh] = useState(false);
+    const dispatch = useDispatch();
+    const { talents } = useSelector((state) => state.talentState);
+
     const [search, setSearch] = useState("");
 
     // fase didmount
     useEffect(() => {
-        apiTalent.findAll().then((data) => {
-            setTalents(data);
-            setLoading(true);
-        });
+        dispatch(doGetTalentRequest());
+        setLoading(true);
     }, []);
 
-    // fecth data to backend when refresh === true
-    // useEffect(() => {
-    //     apiTalent.list().then((data) => {
-    //         setTalents(data);
-    //         setLoading(true);
-    //     });
-    //     setRefresh(false);
-    // }, [refresh]);
-
     return (
-        <Page title="talent" titleButton="back">
+        <Page title="talent saga" titleButton="back">
             <div className="hidden mt-0 sm:block">
                 <div className="align-middle inline-block min-w-full border-b border-gray-200">
                     <div className="flex items-baseline font-semibold justify-center">
