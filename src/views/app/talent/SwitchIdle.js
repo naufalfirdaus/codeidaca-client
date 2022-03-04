@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { doGetTalentDetailRequest } from '../../../redux-saga/actions/TalentDetail';
@@ -8,52 +7,40 @@ import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup"
 import { toast } from "react-toastify";
-
-import apiPlacement from "../../../api/api-placement";
-
-import {
-    CalendarIcon,
-} from '@heroicons/react/solid'
+import { doSwitchIdleRequest } from '../../../redux-saga/actions/Placement';
 
 
 export default function SwitchIdle(props) {
-
-    const [startDate, setStartDate] = useState(new Date());
 
     const { id } = useParams()
     const dispatch = useDispatch()
     const { details } = useSelector((state) => state.talentDetailState)
 
+
     useEffect(() => {
         dispatch(doGetTalentDetailRequest(id))
-    }, [id])
+    }, [])
 
     const formik = useFormik({
         initialValues: {
-            tati_timeline_name: "",
-            tati_date: "",
-            tati_tale_id: 2
+            tati_date: '',
+            tati_timeline_name: '',
+            tati_tale_id: id
         },
-        validationSchema: Yup.object().shape({
-            tati_timeline_name: Yup.string().required("Please enter Note")
-        }),
-        onSubmit: async (values) => {
-            values.tati_date = startDate;
+        onSubmit: values => {
             const payload = {
-                tati_timeline_name: values.tati_timeline_name.toUpperCase() || ""
-            };
+                tati_date: values.tati_date || '',
+                tati_timeline_name: values.tati_timeline_name || '',
+                tati_tale_id: id
+            }
+            dispatch(doSwitchIdleRequest(payload))
 
-            await apiPlacement
-                .switchIdle(payload)
-                .then(() => {
-                    // console.log(result);
-                    props.closeModal();
-                    toast.success("Data successfully inserted");
+            props.closeModal()
 
-                })
-                .catch((error) => console.log(error));
-        }
+
+        },
     });
+
 
     return (
         <div>
@@ -66,8 +53,6 @@ export default function SwitchIdle(props) {
                         onClose={() => null}
                     >
                         <div className="min-h-screen  px-5 text-center">
-
-
                             {/* This element is to trick the browser into centering the modal contents. */}
                             <span
                                 className="inline-block h-screen  align-middle"
@@ -99,40 +84,28 @@ export default function SwitchIdle(props) {
                                                             Start
                                                         </label>
                                                         <div className='flex items-center'>
-                                                            <DatePicker className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" selected={startDate} onChange={(date) => setStartDate(date)} />
-                                                            <CalendarIcon
-                                                                htmlFor="tati_date"
-                                                                className="mx-1 w-8 h-8 text-gray-600"
+                                                            <input type="date" id="tati_date"
+                                                                onChange={formik.handleChange}
+                                                                value={formik.values.tati_date} className="shadow-sm mt-3 focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                                                             />
                                                         </div>
 
                                                     </div>
                                                 </div>
                                                 <div className="flex">
-                                                    <label htmlFor="notes" className="flex py-4 mr-6 justify-betwen block text-sm font-medium text-gray-700">
+                                                    <label htmlFor="tati_timeline_name" name='tati_timeline_name' className="flex py-4 mr-6 justify-betwen block text-sm font-medium text-gray-700">
                                                         Notes
                                                     </label>
                                                     <input
                                                         type="text"
                                                         id="tati_timeline_name"
                                                         name="tati_timeline_name"
-                                                        value={formik.values.tati_timeline_name}
                                                         onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
+                                                        value={formik.values.tati_timeline_name}
                                                         autoComplete="tati_timeline_name"
                                                         className="shadow-sm mt-3 focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                                                     />
-                                                    {/* <textarea
-                                                        id="tati_timeline_name"
-                                                        name="tati_timeline_name"
-                                                        value={formik.values.tati_timeline_name}
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                        rows={2}
-                                                        className="shadow-sm mt-3 focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
-                                                        placeholder="Notes"
-                                                        defaultValue={""}
-                                                    /> */}
+
                                                 </div>
 
 
@@ -142,6 +115,7 @@ export default function SwitchIdle(props) {
                                                     type="button"
                                                     className="inline-flex justify-center py-2 px-4 mr-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                                                     onClick={formik.handleSubmit}
+
                                                 >
                                                     Set To Idle
                                                 </button>
@@ -161,6 +135,6 @@ export default function SwitchIdle(props) {
                     </Dialog>
                 </Transition>
             )}
-        </div>
+        </div >
     )
 }

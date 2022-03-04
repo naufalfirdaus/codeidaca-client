@@ -112,13 +112,13 @@ export default function TalentDetail() {
                                             <dt className="text-sm font-medium text-gray-500">Skill</dt>
                                             <dd className="mt-1 text-sm text-gray-900 ">{detail.talent.tale_tag_skill}</dd>
                                         </div>
-                                        {(clients || []).map((client) =>
+                                        {(clients || []).map((client) => (
                                             <div className="bg-white px-4  ">
                                                 <dt className="text-sm font-medium text-gray-500">Placement</dt>
                                                 <dd className="mt-1 text-sm text-gray-900 ">{client.client[0].client_name} </dd>
                                                 <dd className="mt-1 text-sm text-gray-900 ">Start: {client.place[0].place_start_date} Until {client.place[0].place_end_date}</dd>
                                             </div>
-                                        )}
+                                        ))}
                                     </div>
                                     <div className="bg-white px-4 py-5  " >
                                         <dt className="text-sm font-medium text-gray-500">Review Trainer</dt>
