@@ -28,9 +28,11 @@ import Banner from "../../views/compland/Banner";
 import Features from "../../views/compland/Features";
 import Footer from "../../views/compland/Footer";
 import OurInstructor from "../../views/compland/OurInstructor";
+import OurInstructorSaga from "../../views/compland/OurInstructorSaga";
 import OurPartners from "../../views/compland/OurPartners";
 import Portofolio from "../../views/compland/Portofolio";
 import Testimonials from "../../views/compland/Testimonials";
+import TestimonialsSaga from "../../views/compland/TestimonialsSaga"
 import "./darkmode.css";
 import Loaders from "../../views/loader/Loaders";
 import { ChevronUpIcon } from "@heroicons/react/solid";
@@ -536,8 +538,8 @@ export default function LandingPage() {
                         <UpBtn />
                         <Features />
                         <Banner />
-                        <Testimonials />
-                        <OurInstructor />
+                        <TestimonialsSaga />
+                        <OurInstructorSaga/>
                         <OurPartners />
                         <Portofolio />
                         <Footer />

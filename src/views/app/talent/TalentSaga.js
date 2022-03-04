@@ -44,7 +44,7 @@ export default function TalentSaga() {
     }, []);
 
     return (
-        <Page title="talent saga" titleButton="back">
+        <Page title="talent" titleButton="back">
             <div className="hidden mt-0 sm:block">
                 <div className="align-middle inline-block min-w-full border-b border-gray-200">
                     <div className="flex items-baseline font-semibold justify-center">

@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import TestimonialItem from "./TestimonialsItem";
 import config from "../../config/config";
-import apiTestimonials from "../../api/api-testimonials";
 import { Link } from "react-router-dom";
 import { ChevronRightIcon } from "@heroicons/react/solid";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
+import { useDispatch, useSelector } from "react-redux";
+import { doGetTestimoniRequest } from "../../redux-saga/actions/TestimoniAction";
 
 function Testimonials() {
-    const [testi, setTesti] = useState([]);
+    const dispatch = useDispatch();
+    const { testi } = useSelector((state) => state.testimoniState);
     useEffect(() => {
-        apiTestimonials.findBySql().then((data) => {
-            setTesti(data);
-        });
+        dispatch(doGetTestimoniRequest());
     }, []);
 
     const slideLeft = () => {
@@ -28,7 +28,7 @@ function Testimonials() {
             className="container mt-36 text-center flex flex-col items-center"
             id="testimonial"
         >
-            <h3 className="text-4xl font-bold">What They Feel?</h3>
+            <h3 className="text-4xl font-bold">What They Feel</h3>
             <hr className="bg-blue-100 h-1 w-[30%] mt-3 rounded-full animate-pulse"></hr>
             <p className="font-medium mt-4 max-w-lg">
                 We are always on the lookout for all levels of software
