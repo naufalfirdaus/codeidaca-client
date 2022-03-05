@@ -35,7 +35,7 @@ function CardReview({
                 <p className="text-left pt-4 h-[180px] italic text-gray-600 ">" {testimonial} "</p>
 
                 <div>
-                    <div className="mt-4 flex items-center">
+                    <div className="mt-0 flex items-center">
                         <img
                             className=" w-14 h-14 border border-[#BDBDBD] bg-black rounded-full object-cover"
                             src={userImg}

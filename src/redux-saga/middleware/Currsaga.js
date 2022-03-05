@@ -4,20 +4,35 @@ import {
 
 import apiCurriculum from '../../api/apiCurr';
 import {
-    curriculumSucceed,
-    curriculumFailed
+    doGetCurriculumSucceed,
+    doGetCurriculumFailed,
+    doGetCurriculumIdSucceed,
+    doGetCurriculumIdFailed,
+    doGetCurriculumTypeSucceed,
+    doGetCurriculumTypeFailed
+
+
 } from '../actions/Curr'
 
 function* handleGetCurr(){
     try {
         const result = yield call(apiCurriculum.findAll);
-        yield put(curriculumSucceed(result))        
+        yield put(doGetCurriculumSucceed(result))        
     } catch (error) {
-        yield put(curriculumFailed(error));
+        yield put(doGetCurriculumFailed(error));
     }
 }
 
+function* handleGetype() {
+    try {
+        const result = yield call(apiCurriculum.findRegular);
+        yield put(doGetCurriculumTypeSucceed(result)) 
+    } catch (error) {
+        yield put(doGetCurriculumTypeFailed(error));
+    }
+}
 
 export {
-    handleGetCurr
+    handleGetCurr,
+    handleGetype
 }

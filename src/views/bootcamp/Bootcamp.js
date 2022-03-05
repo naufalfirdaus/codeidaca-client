@@ -14,10 +14,9 @@ import apiCurr from '../../api/apiCurr'
 import CardCurriculum from '../../components/bootcamp/CardCurriculum'
 import apiReview from '../../api/apiTesti'
 import CardReview from '../../components/bootcamp/CardReview'
-// import { curriculumRequest } from '../../redux-saga/actions/Curr';
-import { curriculumRequest } from '../../redux-saga/actions/Curr';
 import { data } from 'autoprefixer';
-
+import { doGetTestimoniRequest } from "../../redux-saga/actions/Review";
+import { doGetCurriculumRequest, doGetCurriculumTypeRequest } from '../../redux-saga/actions/Curr';
 
   {/* Slider const */}
 const slideIndex = 1;
@@ -56,7 +55,7 @@ const showSlide = (n) =>{
   }
 
 export default function Bootcamp() {
-
+  const dispatch = useDispatch();
   const [listTesti, setTesti] = useState([])  
 
   const [listCurr, setCurr] = useState([])  
@@ -66,24 +65,32 @@ export default function Bootcamp() {
       input:'',
       select:''
   })
-
+  const [loading, setLoading] = useState(false);
   const curriculum = useSelector((state) => state.curriculumState)
-
-
   useEffect(() => {
-    apiCurr.findAll().then(data => {
-      setCurr(data)
-      console.log(data)
-    })
-  },[]) 
+    dispatch(doGetCurriculumRequest())
+    setLoading(true);
+}, []);
+
+// const { list} = useSelector((state) => state.testimoniState);
+// useEffect(() => {
+//     dispatch(doGetTestimoniRequest());
+// }, []);
+
+  // useEffect(() => {
+  //   apiCurr.findAll().then(data => {
+  //     setCurr(data)
+  //     console.log(data)
+  //   })
+  // },[]) 
   
 
-// useEffect(() => {
-//   apiCurr.findRegular().then(data => {
-//     setCurr(data)
-//     console.log(data)
-//   })
-// },[]) 
+useEffect(() => {
+  apiCurr.findRegular().then(data => {
+    setCurr(data)
+    console.log(data)
+  })
+},[]) 
 
 // useEffect(() => {
 //   apiCurr.findBerbayar().then(data => {
@@ -114,13 +121,15 @@ const handleOnChange = (name) => (event) => {
 
   const Search= event => {
     event.preventDefault();
+    console.log(filter)
     setCurr(
       Array.isArray(curriculum) && curriculum.filter(data =>(
         (data.curr_name.toLowerCase().includes(filter.input.toLowerCase()) ||
         data.curr_type.toLowerCase().includes(filter.input.toLowerCase())) &&
-        (filter.select === 'Type' || data.curr_type.includesfilter.select))))
-  
-      } 
+        (filter.select === 'Type' || data.curr_type.includes(filter.select))))
+    )
+    console.log(listCurr)
+  } 
 
 
  //testi const
@@ -336,7 +345,7 @@ const handleOnChange = (name) => (event) => {
                 data-aos="fade-up"
                 data-aos-duration="2000"
             >
-                {listTesti &&
+                {Array.isArray(listTesti) &&
                     listTesti.map((data) => (
                         <CardReview
                             name={data.user_name}
