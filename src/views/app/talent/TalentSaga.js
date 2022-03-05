@@ -3,8 +3,6 @@ import apiTalent from "../../../api/api-talent";
 import config from "../../../config/config";
 import Page from "../../../component/commons/Page";
 import { useNavigate, NavLink, Link, useLocation } from "react-router-dom";
-import { Dialog, Menu, Transition } from "@headlessui/react";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { doGetTalentRequest } from "../../../redux-saga/actions/TalentAction";
@@ -29,12 +27,16 @@ const columns = [
     { name: "Status" },
 ];
 
+const batch_status = ["idle", "placement", "trial"];
+
 export default function TalentSaga() {
     let navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { talents } = useSelector((state) => state.talentState);
 
+    // search
+    const [listBatches, setListBatches] = useState([]);
     const [search, setSearch] = useState("");
 
     // fase didmount
@@ -47,25 +49,42 @@ export default function TalentSaga() {
         <Page title="talent" titleButton="back">
             <div className="hidden mt-0 sm:block">
                 <div className="align-middle inline-block min-w-full border-b border-gray-200">
-                    <div className="flex items-baseline font-semibold justify-center">
-                        <p className=" m-4 text-gray-500  ">
-                            Search By Category
-                        </p>
+                    <div className="flex items-baseline font-semibold justify-center mt-5">
+                        <p className="text-xs mx-2 py-1">Search by Category</p>
                         <div className="relative flex items-center text-gray-400 focus-within:text-gray-600 ">
-                            <SearchIcon className="w-5 h-8 mb-3 absolute ml-3 items-center  " />
                             <input
                                 type="text"
                                 placeholder="batch, technology, triner..."
                                 onChange={(event) => {
                                     setSearch(event.target.value);
                                 }}
-                                className="pr-3 pl-10 py-2 font-semibold placeholder-gray-500 text-black rounded-2xl mb-4 w-80 ring-gray-300 focus:ring-gray-500 focus:ring-2"
+                                className="form-control relative w-48 block px-2 py-0.5 text-xs font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:border-transparent focus:text-gray-700 focus:ring-1 focus:ring-offset-1 focus:ring-purple-500 focus:outline-none"
+                                aria-label="Search"
+                                aria-describedby="button-addon2"
                             />
+                            <select
+                                name="batch_status"
+                                id="batch_status"
+                                // onChange={handleOnChange("select")}
+                                className="capitalize form-select form-select-sm appearance-none block mx-1 px-2 py-0.5 w-24 text-xs font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:border-transparent focus:text-gray-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-purple-500"
+                                aria-label=".form-select-sm example"
+                            >
+                                <option>Status</option>
+                                {(batch_status || []).map((value, index) => (
+                                    <option
+                                        className="capitalize"
+                                        value={value}
+                                        key={index}
+                                    >
+                                        {value}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
 
                     {loading === true ? (
-                        <table className="min-w-full">
+                        <table className="min-w-full mt-4">
                             <thead>
                                 <tr className="border-t border-gray-200">
                                     {(columns || []).map((col, index) => (
@@ -183,7 +202,14 @@ export default function TalentSaga() {
                                                     )}
                                                 </td>
                                                 <td className="px-6 py-4 justify-center whitespace-nowrap text-sm text-gray-900 text-justify">
-                                                    {data.tale_status_timeline}
+                                                    <div>
+                                                        {
+                                                            data.tale_status_timeline
+                                                        }
+                                                    </div>
+                                                    <div className="text-red-500">
+                                                        {data.tale_status_date}
+                                                    </div>
                                                 </td>
 
                                                 <td className="pr-6">
