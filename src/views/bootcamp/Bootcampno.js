@@ -16,9 +16,6 @@ import CardReview from '../../component/bootcamp/CardReview'
 import { data } from 'autoprefixer';
 import { doGetTestimoniRequest } from "../../redux-saga/actions/Review";
 import { doGetCurriculumRequest, doGetCurriculumTypeRequest } from '../../redux-saga/actions/Curr';
-import Regular from './Regular';
-import Berbayar from './Berbayar';
-import Testimoni from './Review'
 
   {/* Slider const */}
 const slideIndex = 1;
@@ -59,6 +56,7 @@ const showSlide = (n) =>{
 export default function Bootcamp() {
   const dispatch = useDispatch();
   const [listTesti, setTesti] = useState([])  
+
   const [listCurr, setCurr] = useState([])  
   const [listSearch, setListCurr] = useState([])  
 
@@ -78,6 +76,34 @@ export default function Bootcamp() {
 //     dispatch(doGetTestimoniRequest());
 // }, []);
 
+  // useEffect(() => {
+  //   apiCurr.findAll().then(data => {
+  //     setCurr(data)
+  //     console.log(data)
+  //   })
+  // },[]) 
+  
+
+useEffect(() => {
+  apiCurr.findRegular().then(data => {
+    setCurr(data)
+    console.log(data)
+  })
+},[]) 
+
+// useEffect(() => {
+//   apiCurr.findBerbayar().then(data => {
+//     setCurr(data)
+//     console.log(data)
+//   })
+// },[]) 
+
+useEffect(() => {
+  apiReview.findTesti().then(tes => {
+    setTesti(tes)
+    console.log(tes)
+  })
+},[]) 
 
 useEffect(() => {
   setCurr(
@@ -86,11 +112,8 @@ useEffect(() => {
           data.curr_type.toLowerCase().includes(filter.input.toLowerCase())) &&
           (filter.select === 'Type' || data.curr_type.includes(filter.select))))
       )
-
 }, [curriculum]);
 
-
-// console.log(curriculum)
 const handleOnChange = (name) => (event) => {
   setFilter({ ...filter, [name]: event.target.value });
 };
@@ -99,13 +122,13 @@ const handleOnChange = (name) => (event) => {
     event.preventDefault();
     console.log(filter)
     setCurr(
-      Array.isArray(curriculum) && curriculum.filter(data=>(
+      Array.isArray(curriculum) && curriculum.filter(data =>(
         (data.curr_name.toLowerCase().includes(filter.input.toLowerCase()) ||
         data.curr_type.toLowerCase().includes(filter.input.toLowerCase())) &&
         (filter.select === 'Type' || data.curr_type.includes(filter.select))))
     )
-     console.log(curriculum)  
-  }
+    console.log(listCurr)
+  } 
 
 
  //testi const
@@ -242,6 +265,17 @@ const handleOnChange = (name) => (event) => {
                    <option className="capitalize" value={value} key={index}>{value}</option>
                    ))
                 }
+
+                {/* {listCurr.filter((value) => value.curr_type = 'Regular')
+                          .map((data, index) => (
+                            <CardCurriculum logo = {"/img/logo1.png"}
+                            name = {data.curr_name}
+                            title = {data.curr_title}
+                            duration = {"Durasi : " + data.curr_duration}
+                            description = {"Pembelajaran : " + data.curr_description}
+                            link = {"Curriculum"}
+            />
+                          ))} */}
               </select>
               
               <button 
@@ -260,9 +294,18 @@ const handleOnChange = (name) => (event) => {
 <br></br>     
     {/* <div class={'px-8 flex max-w max justify-around'}>                  */}
    
- <Regular 
-      curriculum = {curriculum}
-      />
+    <div className="mt-12 min-w-[80vw] justify-center md:gap-4 md:min-w-full grid gap-8 md:grid-cols-3  " >
+    { Array.isArray(listCurr) && listCurr.map(data => 
+            <CardCurriculum logo = {"/img/logo1.png"}
+                            name = {data.curr_name}
+                            title = {data.curr_title}
+                            duration = {"Durasi : " + data.curr_duration}
+                            description = {"Pembelajaran : " + data.curr_description}
+                            link = {"Curriculum"}
+            />
+             
+      )}
+      </div>
 
 <br></br>
 <br></br>
@@ -270,9 +313,19 @@ const handleOnChange = (name) => (event) => {
 <div>
     <h2 className = 'result'> Result Bootcamp Berbayar </h2>
     <br></br>
-<Berbayar  
-      curriculum = {curriculum}
-/>
+      <div   className="mt-12 min-w-[80vw] justify-center md:gap-4 md:min-w-full grid gap-8 md:grid-cols-3 ">
+          { Array.isArray(listCurr) && listCurr.map(data => 
+            <CardCurriculum logo = {"/img/logo1.png"}
+                            name = {data.curr_name}
+                            title = {data.curr_title}
+                            duration = {"Durasi : " + data.curr_duration}
+                            description = {"Pembelajaran : " + data.curr_description}
+                        //    rating =  {data.cure_rating}
+                            harga = {"Rp. 199.000"}
+                            link = {"Add To Chart"}
+              />
+            )}
+      </div>
 </div>
 
 <br></br>
@@ -281,7 +334,40 @@ const handleOnChange = (name) => (event) => {
 <div className='result'>
   Top Bootcamp Regular Student NodeJS
 </div>
-        <Testimoni/>
+        <section
+            className="containerr mt-0 text-center flex flex-col items-center"
+            id="testimonial"
+        >
+          <div className='font-bold mt-10'>Testimonial</div>
+            <div
+                className="mt-12 min-w-[80vw] justify-center md:gap-4 md:min-w-full grid gap-8 md:grid-cols-5  "
+                data-aos="fade-up"
+                data-aos-duration="2000"
+            >
+                {Array.isArray(listTesti) &&
+                    listTesti.map((data) => (
+                        <CardReview
+                            name={data.user_name}
+                            designation={data.tale_position}
+                            userImg={"/img/profil.jpg"}
+                            rating={data.cure_rating}
+                            bootcamp={data.tale_bootcamp}
+                            testimonial={data.cure_review}
+                        />
+                    ))}
+            </div>
+            <div className="flex justify-end items-end justify-items-end w-full mt-3  ">
+                <Link to="viewall">
+                    <button
+                        type="button"
+                        className=" text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 flex justify-center items-center px-4 py-2 "
+                    >
+                        View All
+                        <ChevronRightIcon className="w-8 " />
+                    </button>
+                </Link>
+            </div>
+        </section>
     </>
   )
 }
