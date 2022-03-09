@@ -7,69 +7,44 @@ import ChartDataLabels from "chartjs-plugin-datalabels"
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const chartColors = [
-    "#FF4500",
-    "#d45087",
-    "#f95d6a",
-    "#FF9900",
-    "#993300",
-    "#99CCFF",
-    "#CCCCCC",
-    "#CC6600",
-    "#99CC33",
-    "#545775",
-    "#9999FF",
-    "#ff7c43",
-    "#CCCC99",
-    "#336699",
-    "#999933",
-    "#666699",
-    "#CC9933",
-    "#006666",
-    "#3399FF",
-    "#666666",
-    "#FFCC66",
-    "#6699CC",
-    "#663366",
-    "#9999CC",
-    "#669999",
-    "#CCCC66",
-    "#0066CC",
-    "#99CCCC",
-    "#999999",
-    "#FFCC00",
-    "#009999",
-    "#999966",
-    "#66CCCC",
-    "#339966",
-    "#CCCC33",
-    "#003f5c",
-    "#665191",
-    "#a05195",
-    "#2f4b7c",
-    "#ffa600",
-    "#EF6F6C",
-    "#465775",
-    "#56E39F",
-    "#59C9A5",
-    "#5B6C5D",
-    "#0A2342",
-    "#2CA58D",
-    "#84BC9C",
-    "#CBA328",
-    "#F46197",
-    "#DBCFB0",
-
-];
-  
+const color = [
+  "#ff4945",
+  "#57423F",
+  "#BFA6A2",
+  "#008AFF",
+  "#005ADC",
+  "#FF7538",
+  "#E83383",
+  "#E85033",
+  "#FF38F4",
+  "#802422",
+  "#FF9391",
+  "#804A49",
+  "#CC3A37",
+  "#B3211E",
+  "#FFFF5E",
+  "#2BA7FF",
+  "#2779B3",
+  "#FF615E",
+  "#0CB341",
+  "#45FF80",
+  "#65B342",
+  "#87FF52",
+  "#1EB3A1",
+  "#38FFE7",
+  "#FF2F2B",
+  "#FFDE5E",
+  "#2BFF6E",
+  "#3844FF",
+  "#85FF89"
+]
 
 
 export default function JurusanChart(){
     const dispatch = useDispatch();
 
   const {jurusan} = useSelector((state) => state.dashboardState);
-  //const { interest } = Bebas;
-  //console.log(interest);
+  
 
   useEffect(() => {
     dispatch(doGetJurusanRequest());
@@ -82,8 +57,8 @@ export default function JurusanChart(){
       {
         label: '# of Votes',
         data: jurusan.map((value) => value.count),
-        backgroundColor: chartColors,
-        borderColor: chartColors,
+        backgroundColor: color,
+        borderColor: ["#FFFFFF"],
         borderWidth: 2,
       },
     ],
@@ -102,10 +77,7 @@ export default function JurusanChart(){
                 precision: 2
             }
         },
-        // title: {
-        //     display: true,
-        //     text: 'Chart.js Line Chart',
-        // },
+        
     },
 };
 
@@ -121,7 +93,7 @@ const set = {
           let percentage = Math.round((value / sum) * 100) + "%";
           return percentage;
         } else {
-         // return percentage;
+        
         }
       },
       color: "black"
@@ -139,30 +111,6 @@ const set = {
   }
 };
 
-// const options = {
-//     maintainAspectRatio: false,
-//     responsive: true,
-//     legend: {
-//       position: 'bottom',
-//       labels: {
-//         boxWidth: 10
-//       }
-//     }
-//  }
-
-// const options = {
-//     plugins: {
-//         legend: {
-//             labels: {
-//                 position: 'right',
-//                 display: false,
-//                 font:{
-//                     size: 14
-//                 }
-//             }
-//         }
-//     }
-// }
 
 
   return (
