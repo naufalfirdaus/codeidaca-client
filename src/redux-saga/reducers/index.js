@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import userReducer from './UserReducer';
-import currReducer from './CurrReducer'
+import applyReducer from './Apply';
 
 const rootReducer = combineReducers({
   userState : userReducer,
-  curriculumState : currReducer
+  applyState : applyReducer
 });
 
 export default rootReducer;

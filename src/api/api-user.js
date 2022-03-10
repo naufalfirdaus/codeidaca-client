@@ -19,7 +19,8 @@ const signin = async(data)=>{
     }
 }
 
+
 export default {
     signin,
-    signup
+    signup,
 }

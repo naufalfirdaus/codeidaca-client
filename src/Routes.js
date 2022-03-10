@@ -15,6 +15,8 @@ import Setting from './views/app/setting/Setting';
 import Talent from './views/app/talent/Talent'
 import BlankLayout from './component/layout/BlankLayout';
 import Signup from './component/layout/Signup';
+import Apply from './views/bootcamp/ApplyBootcamp';
+import ApplyRedux from './views/bootcamp/ApplyRedux';
 
 export default function Routes(isLoggedIn) {
   return useRoutes([
@@ -25,6 +27,7 @@ export default function Routes(isLoggedIn) {
         { path: 'signin', element: <Navigate to="/auth/signin"  />  },
         { path: 'signup', element: <Navigate to="/auth/signup"  />  },
         { path: 'bootcamp', element: <Bootcamp/> },
+        { path: 'apply', element: isLoggedIn ? <ApplyRedux/>:<Navigate to="/auth/signin"/> },
         { path: '404', element: <Page404 /> },
       ]
     },

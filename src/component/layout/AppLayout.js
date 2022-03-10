@@ -53,7 +53,7 @@ export default function AppLayout() {
 
     const dispatch = useDispatch();
     const { userProfile } = useSelector((state) => state.userState);
-
+    console.log(userProfile)
     const onLogout = () => {
         dispatch(doSignoutRequest());
         navigate('/auth/signin', { replace: true });
