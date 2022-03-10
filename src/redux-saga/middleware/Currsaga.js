@@ -23,7 +23,7 @@ function* handleGetCurr(){
     }
 }
 
-function* handleGetype() {
+function* handleGetType() {
     try {
         const result = yield call(apiCurriculum.findRegular);
         yield put(doGetCurriculumTypeSucceed(result)) 
@@ -34,5 +34,5 @@ function* handleGetype() {
 
 export {
     handleGetCurr,
-    handleGetype
+    handleGetType
 }

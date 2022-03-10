@@ -6,20 +6,20 @@ import config from "../../config/config";
 import { useDispatch, useSelector } from 'react-redux';
 import sld from './slide.css'
 import search from './search.css'
-import BtnSlider from './BtnSlide'
+import {motion} from 'framer-motion'
+import BtnSlider from './BtnSLide'
 import dataSlider from './dataSlider'
 import DataTesti  from './dataSlider';
+import Regular from './Regular';
+import Berbayar from './Berbayar';
+import Testimoni from './Testimoni'
 import apiCurr from '../../api/apiCurr'
-import CardCurriculum from '../../component/bootcamp/CardCurriculum'
+import CardCurriculum from '../../components/bootcamp/CardCurriculum'
 import apiReview from '../../api/apiTesti'
-import CardReview from '../../component/bootcamp/CardReview'
+import CardReview from '../../components/bootcamp/CardReview'
 import { data } from 'autoprefixer';
 import { doGetTestimoniRequest } from "../../redux-saga/actions/Review";
 import { doGetCurriculumRequest, doGetCurriculumTypeRequest } from '../../redux-saga/actions/Curr';
-import Regular from './Testimoni';
-import Berbayar from './Berbayar';
-import Testimoni from './Review'
-import Filter from './Filter'
 
   {/* Slider const */}
 const slideIndex = 1;
@@ -60,6 +60,7 @@ const showSlide = (n) =>{
 export default function Bootcamp() {
   const dispatch = useDispatch();
   const [listTesti, setTesti] = useState([])  
+
   const [listCurr, setCurr] = useState([])  
   const [listSearch, setListCurr] = useState([])  
 
@@ -74,10 +75,18 @@ export default function Bootcamp() {
     setLoading(true);
 }, []);
 
-// const { list} = useSelector((state) => state.testimoniState);
-// useEffect(() => {
-//     dispatch(doGetTestimoniRequest());
-// }, []);
+const list = useSelector((state) => state.testimoniState);
+useEffect(() => {
+    dispatch(doGetTestimoniRequest());
+    setLoading(true);
+}, []);
+
+useEffect(() => {
+  apiCurr.findAll().then(data => {
+    setCurr(data)
+    console.log(data)
+  })
+},[]) 
 
 
 useEffect(() => {
@@ -87,11 +96,8 @@ useEffect(() => {
           data.curr_type.toLowerCase().includes(filter.input.toLowerCase())) &&
           (filter.select === 'Type' || data.curr_type.includes(filter.select))))
       )
-
 }, [curriculum]);
 
-
-// console.log(curriculum)
 const handleOnChange = (name) => (event) => {
   setFilter({ ...filter, [name]: event.target.value });
 };
@@ -100,13 +106,13 @@ const handleOnChange = (name) => (event) => {
     event.preventDefault();
     console.log(filter)
     setCurr(
-      Array.isArray(curriculum) && curriculum.filter(data=>(
+      Array.isArray(curriculum) && curriculum.filter(data =>(
         (data.curr_name.toLowerCase().includes(filter.input.toLowerCase()) ||
         data.curr_type.toLowerCase().includes(filter.input.toLowerCase())) &&
         (filter.select === 'Type' || data.curr_type.includes(filter.select))))
     )
-     console.log(curriculum)  
-  }
+    console.log(listCurr)
+  } 
 
 
  //testi const
@@ -222,9 +228,8 @@ const handleOnChange = (name) => (event) => {
 <br></br>
 <br/>
 
-<Filter />
 {/* Filter */}
-        {/* <div className="input-group relative flex justify-center items-stretch w-full mb-2">
+        <div className="input-group relative flex justify-center items-stretch w-full mb-2">
             <p className="text-xs mx-4 py-1">Filter</p>
               <input 
                 type="search" 
@@ -244,6 +249,17 @@ const handleOnChange = (name) => (event) => {
                    <option className="capitalize" value={value} key={index}>{value}</option>
                    ))
                 }
+
+                {/* {listCurr.filter((value) => value.curr_type = 'Regular')
+                          .map((data, index) => (
+                            <CardCurriculum logo = {"/img/logo1.png"}
+                            name = {data.curr_name}
+                            title = {data.curr_title}
+                            duration = {"Durasi : " + data.curr_duration}
+                            description = {"Pembelajaran : " + data.curr_description}
+                            link = {"Curriculum"}
+            />
+                          ))} */}
               </select>
               
               <button 
@@ -254,17 +270,14 @@ const handleOnChange = (name) => (event) => {
                    <path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
                 </svg>
               </button>
-          </div> */}
+          </div>
 
 <br></br>
 {/* Result Bootcamp Regular*/}
 <p className = 'result' >Result Bootcamp Regular </p>
 <br></br>     
     {/* <div class={'px-8 flex max-w max justify-around'}>                  */}
-   
- <Regular 
-      curriculum = {curriculum}
-      />
+   <Regular/>
 
 <br></br>
 <br></br>
@@ -272,18 +285,16 @@ const handleOnChange = (name) => (event) => {
 <div>
     <h2 className = 'result'> Result Bootcamp Berbayar </h2>
     <br></br>
-<Berbayar  
-      curriculum = {curriculum}
-/>
+  <Berbayar/>
 </div>
 
 <br></br>
 <br></br>
-{/Top Bootcamp/}
-<div className='result'>
-  Top Bootcamp Regular Student NodeJS
-</div>
-        <Testimoni/>
+{/*Top Bootcamp*/}
+        <div className='result'>
+          Top Bootcamp Regular Student NodeJS
+        </div>
+      <Testimoni />
     </>
   )
 }

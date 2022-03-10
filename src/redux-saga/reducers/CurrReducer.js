@@ -15,7 +15,7 @@ const currReducer = (state = INIT_STATE, action) => {
                 isLoading: true
             }
         }
-        case ActionType.GET_CURRICULUM_ID_SUCCEED:{
+        case ActionType.GET_CURRICULUM_SUCCEED:{
             return applyGetCurriculumSucceed(state, action)
         }
 

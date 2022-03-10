@@ -12,6 +12,7 @@ function *watchAll() {
     takeEvery(ActionTypeUser.GET_SIGNIN_REQUEST, handleSignin),
     takeEvery(ActionTypeUser.GET_SIGNOUT_REQUEST, handleSignout),
     takeEvery( ActionTypeTestimoni.GET_TESTIMONI_REQUEST,handleGetTestimoni),
+    takeEvery(ActionTypeCurr.GET_CURRICULUM_TYPE_REQUEST, handleGetType),
     takeEvery(ActionTypeCurr.GET_CURRICULUM_REQUEST, handleGetCurr),
   ]);
 }
