@@ -1,14 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React, { useState, Fragment } from "react";
-import { ArrowRightIcon, PlayIcon } from "@heroicons/react/solid";
 import { Dialog, Transition } from "@headlessui/react";
 import { ChevronRightIcon } from "@heroicons/react/solid";
 import { Tab } from "@headlessui/react";
 import { Link } from "react-router-dom";
 
 function Hero() {
-    const [current, setCurrent] = useState(0);
-    // const length = slides.length;
     let [isOpen, setIsOpen] = useState(false);
 
     function closeModal() {

@@ -1,20 +1,12 @@
-import React, { Fragment, useState, useEffect } from "react";
-import apiTalent from "../../../api/api-talent";
+import React, {useState, useEffect } from "react";
 import config from "../../../config/config";
 import Page from "../../../component/commons/Page";
-import { useNavigate, NavLink, Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { doGetTalentRequest } from "../../../redux-saga/actions/TalentAction";
 
 import {
-    DotsVerticalIcon,
-    DuplicateIcon,
-    PhotographIcon,
-    PencilAltIcon,
-    TrashIcon,
-    UserAddIcon,
-    SearchIcon,
     ChevronRightIcon,
 } from "@heroicons/react/solid";
 
@@ -30,13 +22,11 @@ const columns = [
 const batch_status = ["idle", "placement", "trial"];
 
 export default function TalentSaga() {
-    let navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const { talents } = useSelector((state) => state.talentState);
 
     // search
-    const [listBatches, setListBatches] = useState([]);
     const [search, setSearch] = useState("");
 
     // fase didmount

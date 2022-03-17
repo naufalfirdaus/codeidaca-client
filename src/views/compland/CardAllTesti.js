@@ -22,7 +22,7 @@ function CardAllTesti({ nama, bootcamp, testimoni, photo, rating }) {
                 <div>
                     <span className="text-yellow-400 flex h-8">{ratings}</span>
                 </div>
-                <span className="text-sm text-blue-700 dark:text-gray-400 mt-3 font-semibold ">
+                <span className="text-sm text-red-500 dark:text-gray-400 mt-3 font-semibold ">
                     {bootcamp}
                 </span>
                 <span className="text-sm text-gray-500 dark:text-gray-400 italic h-[120px] mt-4">
