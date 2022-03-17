@@ -1,23 +1,12 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
-import { Popover, Dialog, Menu, Transition } from "@headlessui/react";
+import { Popover, Menu, Transition } from "@headlessui/react";
 import {
-    AnnotationIcon,
     ChatAlt2Icon,
-    ChatAltIcon,
-    DocumentReportIcon,
-    HeartIcon,
-    InboxIcon,
     MenuIcon,
-    PencilAltIcon,
     QuestionMarkCircleIcon,
-    ReplyIcon,
-    SparklesIcon,
-    TrashIcon,
     TrendingUpIcon,
     UserGroupIcon,
-    UsersIcon,
-    SelectorIcon,
     XIcon,
 } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
@@ -27,17 +16,13 @@ import Hero from "../../views/compland/Hero";
 import Banner from "../../views/compland/Banner";
 import Features from "../../views/compland/Features";
 import Footer from "../../views/compland/Footer";
-import OurInstructor from "../../views/compland/OurInstructor";
 import OurInstructorSaga from "../../views/compland/OurInstructorSaga";
 import OurPartners from "../../views/compland/OurPartners";
 import Portofolio from "../../views/compland/Portofolio";
-import Testimonials from "../../views/compland/Testimonials";
-import TestimonialsSaga from "../../views/compland/TestimonialsSaga"
 import "./darkmode.css";
 import Loaders from "../../views/loader/Loaders";
-import { ChevronUpIcon } from "@heroicons/react/solid";
 import UpBtn from "../../views/compland/UpBtn";
-import ReactCardSlider from "../../views/compland/ReactCardSlider";
+import ModernSlider from "../../views/compland/ModernSlider";
 
 const solutions = [
     {
@@ -467,19 +452,19 @@ export default function LandingPage() {
                                                         <div className="py-6 px-5">
                                                             <div className="grid grid-cols-2 gap-4">
                                                                 <a
-                                                                    href="#"
+                                                                    href="# "
                                                                     className="text-base font-medium text-gray-900 hover:text-gray-700"
                                                                 >
                                                                     Pricing
                                                                 </a>
                                                                 <a
-                                                                    href="#"
+                                                                    href="# "
                                                                     className="text-base font-medium text-gray-900 hover:text-gray-700"
                                                                 >
                                                                     Partners
                                                                 </a>
                                                                 <a
-                                                                    href="#"
+                                                                    href="# "
                                                                     className="text-base font-medium text-gray-900 hover:text-gray-700"
                                                                 >
                                                                     Company
@@ -487,7 +472,7 @@ export default function LandingPage() {
                                                             </div>
                                                             <div className="mt-6">
                                                                 <Link
-                                                                    to="#"
+                                                                    to="# "
                                                                     className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
                                                                 >
                                                                     Sign up
@@ -513,7 +498,6 @@ export default function LandingPage() {
                             </div>
                         </header>
                         <main>
-                            {/* display contain page like bootcamp, hiring, talent in <Outlet/>*/}
                             <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                                 <Outlet />
                             </div>
@@ -521,25 +505,23 @@ export default function LandingPage() {
 
                         <div>
                             <div className="switc-checkbox container mt-0 pt-7  flex  ">
-                                {/* <span className="icons" style={{ color: darkMode ? "grey" : "yellow" }}>☀︎</span> */}
                                 <p className="mr-2 text-2xl">☀︎</p>
                                 <label className="switch">
                                     <input
                                         type="checkbox"
                                         onChange={() => setDarkMode(!darkMode)}
                                     />
-                                    <span className="slider round border-2"></span>
+                                    <span className="sliderr round border-2"></span>
                                 </label>
                                 <p className="ml-2 text-2xl">☽</p>
-                                {/* <span style={{ color: "grey" }}>☽</span> */}
                             </div>
                             <Hero />
                         </div>
                         <UpBtn />
                         <Features />
                         <Banner />
-                        <TestimonialsSaga />
-                        <OurInstructorSaga/>
+                        <ModernSlider />
+                        <OurInstructorSaga />
                         <OurPartners />
                         <Portofolio />
                         <Footer />

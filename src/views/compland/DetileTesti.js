@@ -1,29 +1,7 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
-import { Popover, Dialog, Menu, Transition } from "@headlessui/react";
-import {
-    AnnotationIcon,
-    ChatAlt2Icon,
-    ChatAltIcon,
-    DocumentReportIcon,
-    HeartIcon,
-    InboxIcon,
-    MenuIcon,
-    PencilAltIcon,
-    QuestionMarkCircleIcon,
-    ReplyIcon,
-    SparklesIcon,
-    TrashIcon,
-    TrendingUpIcon,
-    UserGroupIcon,
-    UsersIcon,
-    SelectorIcon,
-    XIcon,
-    ChevronLeftIcon,
-} from "@heroicons/react/outline";
-import { ChevronDownIcon } from "@heroicons/react/solid";
-import { useSelector, useDispatch } from "react-redux";
-import { doSignoutRequest } from "../../redux-saga/actions/User";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+import { ChevronLeftIcon } from "@heroicons/react/outline";
 import CardAllTesti from "./CardAllTesti";
 import config from "../../config/config";
 import apiTestimonials from "../../api/api-testimonials";

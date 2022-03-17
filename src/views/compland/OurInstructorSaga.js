@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import InstructorItem from "./InstructorItem";
 import config from "../../config/config";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,10 +8,11 @@ function OurInstructor() {
     const { instructor } = useSelector((state) => state.instructorState);
     useEffect(() => {
         dispatch(doGetInstructorRequest());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <div>
-            <section className="container mt-28 text-center">
+            <section className="container mt-[180px] text-center">
                 <h2 className="text-[32px] font-bold " id="triners">
                     Our Instructor
                 </h2>

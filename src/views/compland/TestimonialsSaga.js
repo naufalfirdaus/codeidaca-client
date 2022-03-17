@@ -6,12 +6,13 @@ import { ChevronRightIcon } from "@heroicons/react/solid";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { doGetTestimoniRequest } from "../../redux-saga/actions/TestimoniAction";
-
+import "../../App.css";
 function Testimonials() {
     const dispatch = useDispatch();
     const { testi } = useSelector((state) => state.testimoniState);
     useEffect(() => {
         dispatch(doGetTestimoniRequest());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const slideLeft = () => {

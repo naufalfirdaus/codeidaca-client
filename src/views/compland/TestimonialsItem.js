@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { StarIcon } from "@heroicons/react/solid";
 import StarIconOutlined from "@heroicons/react/outline/StarIcon";
-import config from "../../config/config";
-import apiTestimonials from "../../api/api-testimonials";
 
 function TestimonialsItem({
     rating,
@@ -18,15 +16,8 @@ function TestimonialsItem({
             i < rating ? <StarIcon key={i} /> : <StarIconOutlined key={i} />
         );
 
-    const [testi, setTesti] = useState([]);
-
-    useEffect(() => {
-        apiTestimonials.findAll().then((data) => {
-            setTesti(data);
-        });
-    }, []);
     return (
-        <div className="border rounded-md max-w-md ">
+        <div className="border rounded-md max-w-md mb-8 mt-8 shadow-md ">
             <div className="px-7 pt-7 pb-6">
                 <div className=" text-yellow-400 flex h-8">{ratings}</div>
                 <div className=" flex h-8 mt-3">
