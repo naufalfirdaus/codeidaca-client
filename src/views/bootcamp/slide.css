@@ -1,0 +1,278 @@
+*{
+    box-sizing : border-box;
+
+}
+
+
+
+.content-slide {
+    max-width: 1000px;
+    position: center;
+    margin:auto;
+}
+
+.imgslide {
+    display: none;
+}
+
+.prev,
+.next{
+    cursor:pointer;
+    position:absolute;
+    top:40%;
+    width:auto;
+    padding:16px;
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+
+}
+
+.next{
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.prev:hover,
+.next:hover{
+    background-color: red;
+    color: aliceblue;
+}
+
+.text {
+   color: rgb(141, 123, 123);
+   font-size: 30px;
+   padding: 40px 90px;
+   position: absolute;
+   bottom: 8;
+   width: 100%;
+   text-align: left;
+   font-weight: bold;
+}
+
+
+
+.content-slide .numberslide {
+    color: aqua;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+
+}
+
+@media screen and (max-width:800px) {
+    .content-slide {
+        padding: 8px 50px 12px 50px;
+    }
+
+    .next {
+        right: 50px;
+        border-radius: 3px 0 0 3px;
+    }
+}
+
+.fade {
+    -webkit-animation-name: fade;
+    -webkit-animation-duration: 1.5s;
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+    
+@-webkit-keyframes fade {
+    from {
+        opacity: 4;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fade {
+    from {
+        opacity: .4;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.container .page {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.page .dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: red;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+    border-radius: 50%;
+}
+
+.page .active,
+.page .dot:hover {
+    background-color: black;
+}
+
+.btn-slide {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: red;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* new */
+.container-slider {
+    max-width: 500px;
+    height: 450px;
+    margin: 10px auto 0px 600px;
+    position: relative;
+    overflow: hidden;
+    padding-left: 0px;
+    padding: 0px 0px;
+    /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); */
+  }
+
+  @media screen and (max-width: 700px){
+    .container-slider {
+      margin: 100px 10px 0;
+    }
+  }
+  .slide {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    opacity: 0;
+    transition: opacity ease-in-out 0.4s;
+  }
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    padding: 20px 20 px;
+  }
+  .active-anim {
+    opacity: 1;
+  }
+  
+  .btn-slide {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: transparent;
+    /* border: 1px solid rgba(34, 34, 34, 0.287);  */
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  
+  .btn-slide img {
+    width: 25px;
+    height: 25px;
+    pointer-events: none;
+  }
+  .prev {
+    top: 55%;
+    left: 30px;
+    transform: translateY(-60%);
+  }
+  .next {
+    top: 55%;
+    right: 30px;
+    transform: translateY(-60%);
+  }
+  
+  
+  .container-dots {
+    position: center;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+  }
+  .dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    /* border: 3px solid #141414; */
+    margin: 0 5px;
+    background: #0c0c0c;
+  }
+  .dot.active {
+    background: red;
+  }
+  
+  .des {
+    color: rgb(10, 10, 10);
+    font-size: 18px;
+    padding: 100px 90px;
+    position: absolute;
+    bottom: 8;
+    width: 100%;
+    text-align: left;
+    /* font-weight: bold; */
+ }
+
+ .result {
+  background-color: red;
+  padding : 10px 0px 0px 20px;
+  width: 1550px;;
+  height: 50px;
+  font-size: 18px;
+  color: white;
+  text-align: left;
+}
+
+.link {
+  background-color: rgb(241, 126, 18);
+  padding : 5px 5px 5px 5px;
+  width: auto;
+  height: auto;
+  font-size: 12px;
+  color: white;
+  text-align: center;
+  margin-inline-start: auto;
+  
+}
+
+.submit {
+  background-color: rgb(241, 126, 18);
+  padding : 5px 5px 5px 5px;
+  width: auto;
+  height: auto;
+  font-size: 18px;
+  color: white;
+  text-align: center;
+  border: royalblue;
+}
+
+.containerr {
+  background-color: rgb(255, 250, 249);
+  padding : 0 0 0 0;
+  width: 1200px;
+  height: 580px;
+}
+
+.judul {
+    color: rgb(22, 21, 21);
+    font-size: 20px;
+    bottom: 8;
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+}

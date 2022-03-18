@@ -6,12 +6,13 @@ import { ChevronRightIcon } from "@heroicons/react/solid";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { doGetTestimoniRequest } from "../../redux-saga/actions/TestimoniAction";
-
+import "../../App.css";
 function Testimonials() {
     const dispatch = useDispatch();
     const { testi } = useSelector((state) => state.testimoniState);
     useEffect(() => {
         dispatch(doGetTestimoniRequest());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const slideLeft = () => {
@@ -27,6 +28,8 @@ function Testimonials() {
         <section
             className="container mt-36 text-center flex flex-col items-center"
             id="testimonial"
+            data-aos="fade-up"
+            data-aos-duration="3000"
         >
             <h3 className="text-4xl font-bold">What They Feel</h3>
             <hr className="bg-blue-100 h-1 w-[30%] mt-3 rounded-full animate-pulse"></hr>
@@ -41,16 +44,11 @@ function Testimonials() {
                 className=" h-[400px] mt-4 relative flex items-center text-center   "
             >
                 <ChevronDownIcon
-                    className="w-8 bg-amber-600 rounded-[100%] left-0 absolute opacity-[0.5] hover:opacity-[1] cursor-pointer ml-2 "
+                    className="w-8 bg-gray-200 border border-transparent hover:bg-gray-700 hover:text-white focus:outline-none rounded-[100%] left-0 absolute cursor-pointer ml-2 text-gray-500 "
                     onClick={slideLeft}
                 />
 
-                <div
-                    id="slider"
-                    className="  "
-                    data-aos="fade-up"
-                    data-aos-duration="3000"
-                >
+                <div id="slider" className="  ">
                     {testi &&
                         testi.map((data) => (
                             <div className=" w-[278px] h-[280px] rounded-lg inline-block ml-[5px] mr-[5px] shadow-md dark:bg-gray-800 dark:border-gray-700 mt-5  ">
@@ -66,7 +64,7 @@ function Testimonials() {
                         ))}
                 </div>
                 <ChevronUpIcon
-                    className="w-8 bg-amber-600 rounded-[100%] right-0 absolute opacity-[0.5] hover:opacity-[1] cursor-pointer mr-2 "
+                    className="w-8 bg-gray-200 border border-transparent hover:bg-gray-700 hover:text-white focus:outline-none rounded-[100%] right-0 absolute cursor-pointer mr-2 text-gray-500  "
                     onClick={slideRight}
                 />
             </div>
@@ -74,7 +72,7 @@ function Testimonials() {
                 <Link to="/testimoni/viewall">
                     <button
                         type="button"
-                        className=" text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 flex justify-center items-center px-4 py-2 "
+                        className=" text-gray-700 flex justify-center items-center px-4 py-2 "
                     >
                         View All
                         <ChevronRightIcon className="w-8 " />

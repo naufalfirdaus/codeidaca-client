@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/solid";
-import "./Slider.css";
 import TestimonialItem from "./TestimonialsItem";
 import config from "../../config/config";
 import apiTestimonials from "../../api/api-testimonials";

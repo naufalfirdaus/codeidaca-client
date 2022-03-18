@@ -14,7 +14,7 @@ import {
     doGetTestimoniSucceed,
 } from "../actions/TestimoniAction";
 
-function* handleGetTestimoni() {
+function* handleGetTestimoniSaga() {
     try {
         const result = yield call(apiTestimoni.findBySql);
         yield put(doGetTestimoniSucceed(result));
@@ -23,4 +23,4 @@ function* handleGetTestimoni() {
     }
 }
 
-export { handleGetTestimoni };
+export { handleGetTestimoniSaga };

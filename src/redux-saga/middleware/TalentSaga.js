@@ -10,7 +10,7 @@ import {
 import apiTalent from "../../api/api-talent";
 import { doGetTalentFailed, doGetTalentSucceed } from "../actions/TalentAction";
 
-function* handleGetTalent() {
+function* handleGetTalentSaga() {
     try {
         const result = yield call(apiTalent.findAll);
         yield put(doGetTalentSucceed(result));
@@ -19,4 +19,4 @@ function* handleGetTalent() {
     }
 }
 
-export { handleGetTalent };
+export { handleGetTalentSaga };

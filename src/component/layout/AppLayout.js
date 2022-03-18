@@ -28,7 +28,7 @@ import {
 } from '@heroicons/react/solid'
 
 const navigation = [
-    { name: 'Home', href: '/app/dashboard', icon: HomeIcon, current: true, roles: ['administrator', 'recruiter', 'bd', 'sales', 'trainer'] },
+    { name: 'Home', href: '/app/', icon: HomeIcon, current: true, roles: ['administrator', 'recruiter', 'bd', 'sales', 'trainer'] },
     { name: 'Candidat', href: '/app/candidat', icon: AcademicCapIcon, current: false, roles: ['administrator','recruiter', 'trainer'] },
     { name: 'Batch', href: '/app/batch', icon: ViewGridAddIcon, current: false, roles: ['administrator','recruiter', 'trainer'] },
     { name: 'Talent', href: '/app/talent', icon: UserGroupIcon, current: false, roles: ['administrator','recruiter', 'trainer', 'bd', 'sales'] },

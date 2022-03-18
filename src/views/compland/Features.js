@@ -1,7 +1,6 @@
 import React from "react";
 import { ChevronRightIcon } from "@heroicons/react/solid";
 import {
-    ClockIcon,
     CursorClickIcon,
     HeartIcon,
     UsersIcon,
@@ -30,7 +29,7 @@ function Features() {
                         Icon={CursorClickIcon}
                         title="Need Talent ?"
                         iconBgColor="#92A9BD"
-                        description="While most people enjoy casino gambling,"
+                        description="need talent? we available now"
                         potoni="https://ascendantrecruitment.co.uk/blog/wp-content/uploads/2017/03/person-search-small.jpg"
                         width="100%"
                     />
@@ -44,7 +43,7 @@ function Features() {
                         Icon={UsersIcon}
                         iconBgColor="#92A9BD"
                         title="we Are Hiring"
-                        description="While most people enjoy casino gambling,"
+                        description="we are hiring, see what we need"
                         potoni="https://img.freepik.com/free-vector/megaphone-with-speech-bubble-we-are-hiring-join-our-team-announcement-lettering-it_384372-290.jpg?size=626&ext=jpg"
                         width="full"
                         potoalt="hiring"
@@ -59,7 +58,7 @@ function Features() {
                         Icon={HeartIcon}
                         iconBgColor="#92A9BD"
                         title="Join Bootcamp"
-                        description="While most people enjoy casino gambling,"
+                        description="let's join bootcamp, ready to work after graduation"
                         potoni="https://t4.ftcdn.net/jpg/04/06/41/35/360_F_406413553_RbHZhBnKHsBNwp9xhFhZDvjxIzH7CkUU.jpg"
                         width="100%"
                         potoalt="bootcamp"

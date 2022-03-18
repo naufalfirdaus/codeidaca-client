@@ -4,7 +4,7 @@ import { Link } from "react-scroll";
 
 function Footer() {
     return (
-        <div className="mt-20 pt-12 pb-8">
+        <div className="mt-[200px] pt-12 pb-8">
             <div className="container mb-12 text-center sm:text-left grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
                 <div className="mx-auto sm:ml-0">
                     <Link
@@ -77,7 +77,7 @@ function Footer() {
             </div>
 
             <p className="text-center mt-12">
-                © 2019 PT. Code Development Indonesia. All Rights Reserved.
+                © 2022 PT. Code Development Indonesia. All Rights Reserved.
             </p>
         </div>
     );
