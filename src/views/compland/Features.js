@@ -1,10 +1,6 @@
 import React from "react";
 import { ChevronRightIcon } from "@heroicons/react/solid";
-import {
-    CursorClickIcon,
-    HeartIcon,
-    UsersIcon,
-} from "@heroicons/react/solid";
+import { CursorClickIcon, HeartIcon, UsersIcon } from "@heroicons/react/solid";
 import Feature from "./FeatureItem";
 
 function Features() {
@@ -58,7 +54,7 @@ function Features() {
                         Icon={HeartIcon}
                         iconBgColor="#92A9BD"
                         title="Join Bootcamp"
-                        description="let's join bootcamp, ready to work after graduation"
+                        description="let's join bootcamp codeacademy"
                         potoni="https://t4.ftcdn.net/jpg/04/06/41/35/360_F_406413553_RbHZhBnKHsBNwp9xhFhZDvjxIzH7CkUU.jpg"
                         width="100%"
                         potoalt="bootcamp"

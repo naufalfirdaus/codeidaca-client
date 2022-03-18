@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ChevronUpIcon } from "@heroicons/react/solid";
 import { Link } from "react-scroll";
 
@@ -26,7 +26,7 @@ function UpBtn() {
     window.addEventListener("scroll", toggleVisible);
     return (
         <Link
-            to="hero"
+            to="landingpg"
             activeClass="active"
             spy={true}
             smooth={true}

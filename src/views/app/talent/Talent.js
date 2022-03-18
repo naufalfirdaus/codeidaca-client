@@ -1,19 +1,12 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import apiTalent from "../../../api/api-talent";
 import config from "../../../config/config";
 import Page from "../../../component/commons/Page";
-import { useNavigate, NavLink, Link, useLocation } from "react-router-dom";
-import { Dialog, Menu, Transition } from "@headlessui/react";
-import { ToastContainer, toast } from "react-toastify";
+import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
-    DotsVerticalIcon,
-    DuplicateIcon,
-    PhotographIcon,
-    PencilAltIcon,
-    TrashIcon,
-    UserAddIcon,
+  
     SearchIcon,
     ChevronRightIcon,
 } from "@heroicons/react/solid";
@@ -28,10 +21,8 @@ const columns = [
 ];
 
 export default function Talent() {
-    let navigate = useNavigate();
     const [talents, setTalents] = useState([]);
     const [loading, setLoading] = useState(false);
-    let [refresh, setRefresh] = useState(false);
     const [search, setSearch] = useState("");
 
     // fase didmount

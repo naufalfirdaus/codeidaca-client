@@ -8,7 +8,7 @@ function Footer() {
             <div className="container mb-12 text-center sm:text-left grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
                 <div className="mx-auto sm:ml-0">
                     <Link
-                        to="hero"
+                        to="landingpg"
                         activeClass="active"
                         spy={true}
                         smooth={true}

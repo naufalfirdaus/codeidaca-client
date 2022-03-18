@@ -70,45 +70,22 @@ export default function LandingPage() {
     };
 
     const [Loading, setLoading] = useState(true);
-    const [darkMode, setDarkMode] = useState(false);
 
     useEffect(() => {
         setTimeout(() => {
             setLoading(false);
         }, 2000);
     });
-
-    // window.addEventListener("scroll", function () {
-    //     const header = document.querySelector("header");
-    //     header.classList.toggle("sticky", window.scrollY > 0);
-    // });
-
-    // const sticky = () => {
-    //     var navbar = document.getElementById("header");
-    //     navbar.classList.toggle("sticky", window.screenY > 0);
-    // };
     return (
         <div className=" scroll-smooth ">
             {Loading === true ? (
                 <Loaders />
             ) : (
-                <div data-aos="fade-up">
-                    <div
-                        className={
-                            darkMode
-                                ? " bg-slate-900 text-slate-300 "
-                                : "bg-white"
-                        }
-                    >
+                <div data-aos="fade-up" id="landingpg">
+                    <div className="bg-white">
                         <header className="">
                             <div>
-                                <Popover
-                                    className={
-                                        darkMode
-                                            ? " bg-slate-900 text-slate-300 "
-                                            : "bg-white"
-                                    }
-                                >
+                                <Popover className="bg-white">
                                     {({ open }) => (
                                         <>
                                             <div className="flex justify-between items-center max-w-7xl mx-auto px-4 py-6 sm:px-6 md:justify-start md:space-x-10 lg:px-8">
@@ -503,20 +480,7 @@ export default function LandingPage() {
                             </div>
                         </main>
 
-                        <div>
-                            <div className="switc-checkbox container mt-0 pt-7  flex  ">
-                                <p className="mr-2 text-2xl">☀︎</p>
-                                <label className="switch">
-                                    <input
-                                        type="checkbox"
-                                        onChange={() => setDarkMode(!darkMode)}
-                                    />
-                                    <span className="sliderr round border-2"></span>
-                                </label>
-                                <p className="ml-2 text-2xl">☽</p>
-                            </div>
-                            <Hero />
-                        </div>
+                        <Hero />
                         <UpBtn />
                         <Features />
                         <Banner />
