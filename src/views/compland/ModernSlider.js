@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Sliders from "react-slick";
 import "../../App.css";
 import config from "../../config/config";
+import { Link } from "react-router-dom";
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/solid";
 import TestimonialsItem from "./TestimonialsItem";
 import { useDispatch, useSelector } from "react-redux";
@@ -114,8 +115,19 @@ function ModernSlider() {
                             ))}
                     </Sliders>
                 </div>
+
             </div>
+            <Link to="/testimoni/viewall">
+                    <button
+                        type="button"
+                        className=" text-gray-700 flex justify-center items-center mt-32 "
+                    >
+                        View All
+                        <ChevronRightIcon className="w-8" />
+                    </button>
+                </Link>
         </section>
+        
     );
 }
 
